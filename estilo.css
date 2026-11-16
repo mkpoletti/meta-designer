@@ -387,6 +387,11 @@ main, .rodape { position: relative; z-index: 2; }
 .portfolio-cartao .ver { display: inline-flex; gap: 6px; margin-top: 10px; font-size: 14px; font-weight: 500; color: var(--marca); opacity: 0; transform: translateX(-6px); transition: opacity 0.3s, transform 0.3s var(--e-entrada); }
 .portfolio-cartao:hover .ver, .portfolio-cartao:focus-visible .ver { opacity: 1; transform: none; }
 @media (hover: none) { .portfolio-cartao .ver { opacity: 1; transform: none; } }
+/* projetos com site publicado: abrem numa página nova, "Ver site ao vivo" sempre visível */
+a.portfolio-cartao { text-decoration: none; }
+a.portfolio-cartao .ver { opacity: 1; transform: none; }
+.cartao-projeto.com-link, .cartao-projeto.com-link figure { cursor: pointer; }
+.cilindro.arrastando .cartao-projeto.com-link { cursor: grabbing; }
 
 /* visualizador de projeto */
 .projeto-vis { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 24px var(--margem); background: rgba(11,27,51,0.35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.3s; }

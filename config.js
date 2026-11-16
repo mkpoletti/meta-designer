@@ -19,12 +19,14 @@ window.SITE = {
 
   // Telas 3D do hero (a do meio é a principal). "longo" = screenshot de página inteira que rola dentro da tela.
   telas: [
+    // no telemóvel aparecem só as posições 1, 3 e 5 (Nevogilde, Serena, Nácar)
+    // "link" = site publicado (referência; as telas do hero não são clicáveis)
     { img: "assets/projetos/dentix.webp", nome: "Dentix", setor: "Implantologia", url: "dentix" },
+    { img: "assets/projetos/nevogilde-longo.webp", nome: "Residência Nevogilde", setor: "Imobiliário · Porto", url: "residencia-nevogilde", longo: true, link: "https://mkpoletti.github.io/residencia-nevogilde/" },
     { img: "assets/projetos/santa-zita-longo.webp", nome: "Santa Zita", setor: "Medicina dentária", url: "clinicasantazita.pt", longo: true },
+    { img: "assets/projetos/serena-longo.webp", nome: "Serena", setor: "Bem-estar e nutrição", url: "serena", longo: true, link: "https://mkpoletti.github.io/serena-landing/" },
     { img: "assets/projetos/terraco-nobre.webp", nome: "Terraço Nobre", setor: "Imobiliário", url: "terraconobre" },
-    { img: "assets/projetos/antonio-gaspar-longo.webp?v=2", nome: "António Gaspar", setor: "Fisioterapia · Lisboa", url: "antoniogaspar", longo: true },
+    { img: "assets/projetos/nacar-longo.webp", nome: "Nácar", setor: "Medicina dentária · Lisboa", url: "nacar", longo: true, link: "https://mkpoletti.github.io/nacar-site/" },
     { img: "assets/projetos/legatus.webp", nome: "Legatus", setor: "Advocacia", url: "legatus" },
-    { img: "assets/projetos/onyria-longo.webp", nome: "Onyria", setor: "Eventos · Cascais e Lisboa", url: "onyria", longo: true },
-    { img: "assets/projetos/amplify.webp", nome: "Amplify", setor: "Audiovisual", url: "amplify" },
   ],
 };

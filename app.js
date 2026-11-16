@@ -28,7 +28,7 @@
   let ceuPedido = false;
   const carregarCeu = () => {
     if (ceuPedido) return; ceuPedido = true;
-    import("./ceu.js").catch(() => document.documentElement.classList.add("sem-webgl"));
+    import("./ceu.js?v=20261116b").catch(() => document.documentElement.classList.add("sem-webgl"));
   };
   const ocioso = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
   // desktop: assim que o browser fica livre · telemóvel: no 1.º toque/rolagem (ou ao fim de 3,5 s)
@@ -173,13 +173,31 @@
   const projetos = cartoes.map((c) => {
     const img = c.querySelector("img"), cap = c.querySelector("figcaption");
     const nome = cap.querySelector("strong").textContent;
-    return { nome, setor: cap.querySelector("span").textContent, src: img.getAttribute("src"), alt: img.alt, longo: longos[nome] };
+    return { nome, setor: cap.querySelector("span").textContent, src: img.getAttribute("src"), alt: img.alt, longo: longos[nome], link: c.dataset.link };
   });
   const barra = '<span class="tela-pc-barra" aria-hidden="true"><i></i><i></i><i></i></span>';
-  grelha.innerHTML = projetos.map((p, i) => `<li style="--i:${i}"><button type="button" class="portfolio-cartao" data-i="${i}" aria-label="Ver o projeto ${p.nome}">
-      <span class="tela-pc">${barra}<img src="${p.src}" alt="${p.alt}" width="1000" height="625" loading="lazy"></span>
-      <span class="num">${String(i + 1).padStart(2, "0")}</span><span class="titulo">${p.nome}</span><span class="setor">${p.setor}</span>
-      <span class="ver">Ver projeto <i aria-hidden="true">→</i></span></button></li>`).join("");
+  // projetos com "link" abrem o site publicado numa página nova; os outros abrem o visualizador
+  grelha.innerHTML = projetos.map((p, i) => {
+    const miolo = `<span class="tela-pc">${barra}<img src="${p.src}" alt="${p.alt}" width="1000" height="625" loading="lazy"></span>
+      <span class="num">${String(i + 1).padStart(2, "0")}</span><span class="titulo">${p.nome}</span><span class="setor">${p.setor}</span>`;
+    return p.link
+      ? `<li style="--i:${i}"><a class="portfolio-cartao" href="${p.link}" target="_blank" rel="noopener" aria-label="Abrir o site ${p.nome} numa nova página">${miolo}
+      <span class="ver">Ver site ao vivo <i aria-hidden="true">↗</i></span></a></li>`
+      : `<li style="--i:${i}"><button type="button" class="portfolio-cartao" data-i="${i}" aria-label="Ver o projeto ${p.nome}">${miolo}
+      <span class="ver">Ver projeto <i aria-hidden="true">→</i></span></button></li>`;
+  }).join("");
+  // cilindro: clicar (sem arrastar) num cartão com link abre o site
+  // (o cilindro captura o ponteiro, por isso decide-se no pointerdown/pointerup do próprio cilindro)
+  cartoes.forEach((c) => c.dataset.link && c.classList.add("com-link"));
+  let toqueCartao = null;
+  cil.addEventListener("pointerdown", (e) => {
+    const c = e.target.closest(".cartao-projeto.com-link");
+    toqueCartao = c ? { c, x: e.clientX, y: e.clientY } : null;
+  }, true);
+  cil.addEventListener("pointerup", (e) => {
+    if (toqueCartao && Math.hypot(e.clientX - toqueCartao.x, e.clientY - toqueCartao.y) < 6) window.open(toqueCartao.c.dataset.link, "_blank", "noopener");
+    toqueCartao = null;
+  });
   const numWhats = String(S.whatsapp?.numero || "").replace(/\D/g, "");
   const abrirProjeto = (i) => {
     const p = projetos[i];
@@ -195,7 +213,7 @@
     $(".projeto-vis-fechar", vis).focus();
   };
   const fecharProjeto = () => { vis.classList.remove("aberto"); setTimeout(() => (vis.hidden = true), 300); };
-  grelha.addEventListener("click", (e) => { const c = e.target.closest(".portfolio-cartao"); if (c) abrirProjeto(+c.dataset.i); });
+  grelha.addEventListener("click", (e) => { const c = e.target.closest("button.portfolio-cartao"); if (c) abrirProjeto(+c.dataset.i); });
   $(".projeto-vis-fechar", vis).addEventListener("click", fecharProjeto);
   vis.addEventListener("click", (e) => { if (e.target === vis) fecharProjeto(); });
   $(".projeto-vis-contacto", vis).addEventListener("click", (e) => {
