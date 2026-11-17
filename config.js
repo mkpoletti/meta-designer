@@ -28,6 +28,11 @@ window.SITE = {
     conversoes: { formulario: "", whatsapp: "" },
   },
 
+  // Meta (Facebook/Instagram) Pixel. Só carrega com consentimento de marketing.
+  // Eventos: PageView, Lead (formulário enviado) e Contact (clique no WhatsApp).
+  // NUNCA colocar aqui o token da API de Conversões: este ficheiro é público.
+  metaPixel: "1163218391923665",
+
 
   // Telas 3D do hero (a do meio é a principal). "longo" = screenshot de página inteira que rola dentro da tela.
   telas: [

@@ -365,7 +365,21 @@
     ad_user_data: c.marketing ? "granted" : "denied",
     ad_personalization: c.marketing ? "granted" : "denied",
   });
+  /* Meta Pixel (Facebook/Instagram): só com consentimento de marketing */
+  let pixelCarregado = false;
+  const carregarPixel = (c) => {
+    if (!S.metaPixel) return;
+    if (!c?.marketing) { if (pixelCarregado) fbq("consent", "revoke"); return; }
+    if (pixelCarregado) { fbq("consent", "grant"); return; }
+    pixelCarregado = true;
+    /* eslint-disable */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    /* eslint-enable */
+    fbq("init", S.metaPixel);
+    fbq("track", "PageView");
+  };
   const carregarTags = (c) => {
+    carregarPixel(c);
     if (!c || !(c.estatistica || c.marketing)) return;
     // O GA4 carrega com qualquer um dos consentimentos: as conversões do Google Ads são importadas do GA4.
     // O Consent Mode garante que só usa cookies de estatística/publicidade conforme a escolha do visitante.
@@ -384,8 +398,10 @@
   };
   /* Conversões: formulário enviado e clique no WhatsApp */
   window.mdConversao = (tipo) => {
-    if (!window.gtag) return;
     const c = lerConsent() || {};
+    // Meta: Lead = formulário enviado, Contact = clique no WhatsApp
+    if (c.marketing && pixelCarregado && window.fbq) fbq("track", tipo === "formulario" ? "Lead" : "Contact", { content_name: tipo });
+    if (!window.gtag) return;
     if ((c.estatistica || c.marketing) && S.analytics) {
       const nome = S.eventosGA4?.[tipo] || (tipo === "formulario" ? "generate_lead" : "contacto_whatsapp");
       gtag("event", nome, { metodo: tipo, pagina: location.pathname });
