@@ -376,7 +376,26 @@
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");
     /* eslint-enable */
     fbq("init", S.metaPixel);
-    fbq("track", "PageView");
+    metaEvento("PageView");
+  };
+  /* Cada evento vai pelo Pixel (browser) e pela API de Conversões (/api/meta, servidor) com o mesmo eventID:
+     a Meta deduplica e recupera eventos que bloqueadores ou o Safari escondem. */
+  const lerCookie = (n) => (document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)")) || [])[1];
+  const fbclid = new URLSearchParams(location.search).get("fbclid");
+  const fbcDoClique = fbclid ? `fb.1.${Date.now()}.${fbclid}` : undefined;
+  const metaEvento = (nome, dados = {}) => {
+    if (!pixelCarregado || !window.fbq) return;
+    const id = (crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    fbq("track", nome, dados, { eventID: id });
+    if (!/^(www\.)?metadesigner\.site$/.test(location.hostname)) return; // só em produção
+    // espera um pouco para o Pixel criar o cookie _fbp
+    setTimeout(() => {
+      const corpo = JSON.stringify({ event_name: nome, event_id: id, event_source_url: location.href, fbp: lerCookie("_fbp"), fbc: lerCookie("_fbc") || fbcDoClique });
+      try {
+        if (!navigator.sendBeacon?.("/api/meta", new Blob([corpo], { type: "application/json" })))
+          fetch("/api/meta", { method: "POST", headers: { "Content-Type": "application/json" }, body: corpo, keepalive: true }).catch(() => {});
+      } catch {}
+    }, nome === "PageView" ? 1500 : 0);
   };
   const carregarTags = (c) => {
     carregarPixel(c);
@@ -400,7 +419,7 @@
   window.mdConversao = (tipo) => {
     const c = lerConsent() || {};
     // Meta: Lead = formulário enviado, Contact = clique no WhatsApp
-    if (c.marketing && pixelCarregado && window.fbq) fbq("track", tipo === "formulario" ? "Lead" : "Contact", { content_name: tipo });
+    if (c.marketing) metaEvento(tipo === "formulario" ? "Lead" : "Contact", { content_name: tipo });
     if (!window.gtag) return;
     if ((c.estatistica || c.marketing) && S.analytics) {
       const nome = S.eventosGA4?.[tipo] || (tipo === "formulario" ? "generate_lead" : "contacto_whatsapp");

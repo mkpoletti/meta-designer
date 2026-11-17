@@ -37,9 +37,9 @@
 - Ser encontrado: preparado para o Google e para o ChatGPT, Gemini e Perplexity.
 
 ## Projetos realizados
-- Serena (Bem-estar e nutrição): https://mkpoletti.github.io/serena-landing/
-- Nácar (Medicina dentária · Lisboa): https://mkpoletti.github.io/nacar-site/
-- Residência Nevogilde (Imobiliário · Porto): https://mkpoletti.github.io/residencia-nevogilde/
+- Serena (projeto conceito · Bem-estar e nutrição): https://mkpoletti.github.io/serena-landing/
+- Nácar (projeto conceito · Medicina dentária · Lisboa): https://mkpoletti.github.io/nacar-site/
+- Residência Nevogilde (projeto conceito · Imobiliário · Porto): https://mkpoletti.github.io/residencia-nevogilde/
 - Santa Zita (Medicina dentária)
 - Terraço Nobre (Imobiliário)
 - Dentix (Implantologia)

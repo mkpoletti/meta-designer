@@ -39,11 +39,11 @@ window.SITE = {
     // no telemóvel aparecem só as posições 1, 3 e 5 (Nevogilde, Serena, Nácar)
     // "link" = site publicado (referência; as telas do hero não são clicáveis)
     { img: "assets/projetos/dentix.webp", nome: "Dentix", setor: "Implantologia", url: "dentix" },
-    { img: "assets/projetos/nevogilde-longo.webp", nome: "Residência Nevogilde", setor: "Imobiliário · Porto", url: "residencia-nevogilde", longo: true, link: "https://mkpoletti.github.io/residencia-nevogilde/" },
+    { img: "assets/projetos/nevogilde-longo.webp", nome: "Residência Nevogilde", setor: "Projeto conceito · Imobiliário · Porto", url: "residencia-nevogilde", longo: true, link: "https://mkpoletti.github.io/residencia-nevogilde/" },
     { img: "assets/projetos/santa-zita-longo.webp", nome: "Santa Zita", setor: "Medicina dentária", url: "clinicasantazita.pt", longo: true },
-    { img: "assets/projetos/serena-longo.webp", nome: "Serena", setor: "Bem-estar e nutrição", url: "serena", longo: true, link: "https://mkpoletti.github.io/serena-landing/" },
+    { img: "assets/projetos/serena-longo.webp", nome: "Serena", setor: "Projeto conceito · Bem-estar e nutrição", url: "serena", longo: true, link: "https://mkpoletti.github.io/serena-landing/" },
     { img: "assets/projetos/terraco-nobre.webp", nome: "Terraço Nobre", setor: "Imobiliário", url: "terraconobre" },
-    { img: "assets/projetos/nacar-longo.webp", nome: "Nácar", setor: "Medicina dentária · Lisboa", url: "nacar", longo: true, link: "https://mkpoletti.github.io/nacar-site/" },
+    { img: "assets/projetos/nacar-longo.webp", nome: "Nácar", setor: "Projeto conceito · Medicina dentária · Lisboa", url: "nacar", longo: true, link: "https://mkpoletti.github.io/nacar-site/" },
     { img: "assets/projetos/legatus.webp", nome: "Legatus", setor: "Advocacia", url: "legatus" },
   ],
 };
