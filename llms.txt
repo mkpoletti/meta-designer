@@ -25,9 +25,9 @@
 - CNPJ 38.284.190/0001-99 · Recreio dos Bandeirantes, RJ
 
 ## Páginas
-- Página principal: https://metadesigner.pt/
-- Política de Privacidade: https://metadesigner.pt/privacidade.html
-- Termos e Condições: https://metadesigner.pt/termos.html
+- Página principal: https://metadesigner.site/
+- Política de Privacidade: https://metadesigner.site/privacidade
+- Termos e Condições: https://metadesigner.site/termos
 
 ## Processo (3 passos)
 - Desenhar: design pensado para a marca do cliente (cores, tipografia, imagens).

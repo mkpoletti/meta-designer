@@ -38,4 +38,4 @@ Allow: /
 User-agent: MistralAI-User
 Allow: /
 
-Sitemap: https://metadesigner.pt/sitemap.xml
+Sitemap: https://metadesigner.site/sitemap.xml

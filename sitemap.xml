@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://metadesigner.pt/</loc><lastmod>2026-11-13</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://metadesigner.pt/privacidade.html</loc><lastmod>2026-11-13</lastmod><priority>0.3</priority></url>
-  <url><loc>https://metadesigner.pt/termos.html</loc><lastmod>2026-11-13</lastmod><priority>0.3</priority></url>
-  <url><loc>https://metadesigner.pt/llms.txt</loc><lastmod>2026-11-13</lastmod><priority>0.2</priority></url>
+  <url><loc>https://metadesigner.site/</loc><lastmod>2026-11-17</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://metadesigner.site/privacidade</loc><lastmod>2026-11-17</lastmod><priority>0.3</priority></url>
+  <url><loc>https://metadesigner.site/termos</loc><lastmod>2026-11-17</lastmod><priority>0.3</priority></url>
+  <url><loc>https://metadesigner.site/llms.txt</loc><lastmod>2026-11-17</lastmod><priority>0.2</priority></url>
 </urlset>
