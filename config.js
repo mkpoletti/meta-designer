@@ -14,10 +14,15 @@ window.SITE = {
   },
 
   // ID do Google Analytics 4 (ex.: "G-XXXXXXX"). Só carrega depois de o visitante aceitar cookies de estatística.
-  analytics: "",
+  // Propriedade GA4 "Contacto" (conta Agencia Meta Designer), ligada ao Google Ads "Mike o Design".
+  analytics: "G-W6BKJHF1BF",
 
-  // Google Ads: ID da conta (ex.: "AW-123456789") e o rótulo de cada conversão (a parte depois da "/" no "send_to").
-  // Só carrega depois de o visitante aceitar cookies de marketing.
+  // Nomes dos eventos GA4. Têm de ser EXATAMENTE estes: o Google Ads importa-os como conversões principais
+  // ("Contacto (web) whatsapp_click" e "Contacto (web) conato_click"). Não corrigir a grafia de "conato".
+  eventosGA4: { formulario: "conato_click", whatsapp: "whatsapp_click" },
+
+  // Google Ads (opcional): só é preciso se criares conversões nativas do Ads em vez das importadas do GA4.
+  // ID da conta (ex.: "AW-123456789") e o rótulo de cada conversão (a parte depois da "/" no "send_to").
   googleAds: {
     id: "",
     conversoes: { formulario: "", whatsapp: "" },

@@ -367,7 +367,9 @@
   });
   const carregarTags = (c) => {
     if (!c || !(c.estatistica || c.marketing)) return;
-    const ids = [c.estatistica && S.analytics, c.marketing && ADS.id].filter(Boolean);
+    // O GA4 carrega com qualquer um dos consentimentos: as conversões do Google Ads são importadas do GA4.
+    // O Consent Mode garante que só usa cookies de estatística/publicidade conforme a escolha do visitante.
+    const ids = [S.analytics, c.marketing && ADS.id].filter(Boolean);
     if (!ids.length) return;
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () { dataLayer.push(arguments); };
@@ -384,7 +386,10 @@
   window.mdConversao = (tipo) => {
     if (!window.gtag) return;
     const c = lerConsent() || {};
-    if (c.estatistica && S.analytics) gtag("event", tipo === "formulario" ? "generate_lead" : "contacto_whatsapp", { metodo: tipo });
+    if ((c.estatistica || c.marketing) && S.analytics) {
+      const nome = S.eventosGA4?.[tipo] || (tipo === "formulario" ? "generate_lead" : "contacto_whatsapp");
+      gtag("event", nome, { metodo: tipo, pagina: location.pathname });
+    }
     const rotulo = ADS.conversoes?.[tipo];
     if (c.marketing && ADS.id && rotulo) gtag("event", "conversion", { send_to: `${ADS.id}/${rotulo}` });
   };
