@@ -16,6 +16,13 @@ window.SITE = {
   // ID do Google Analytics 4 (ex.: "G-XXXXXXX"). Só carrega depois de o visitante aceitar cookies de estatística.
   analytics: "",
 
+  // Google Ads: ID da conta (ex.: "AW-123456789") e o rótulo de cada conversão (a parte depois da "/" no "send_to").
+  // Só carrega depois de o visitante aceitar cookies de marketing.
+  googleAds: {
+    id: "",
+    conversoes: { formulario: "", whatsapp: "" },
+  },
+
 
   // Telas 3D do hero (a do meio é a principal). "longo" = screenshot de página inteira que rola dentro da tela.
   telas: [

@@ -344,6 +344,7 @@
       cartao.style.minHeight = cartao.offsetHeight + "px";
       cartao.classList.add("enviado");
       $(".contacto-sucesso").hidden = false;
+      window.mdConversao?.("formulario");
     } catch (e) {
       console.warn("Falha no envio:", e);
       status.className = "form-status falha";
@@ -355,33 +356,60 @@
   const ban = $(".cookies");
   const lerConsent = () => { try { return JSON.parse(localStorage.getItem("md-cookies") || "null"); } catch { return null; } };
   const gravar = (v) => { try { localStorage.setItem("md-cookies", JSON.stringify(v)); } catch {} };
-  const carregarAnalytics = () => {
-    if (!S.analytics || window.gtag) return;
-    const s = document.createElement("script");
-    s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${S.analytics}`;
-    document.head.appendChild(s);
+  /* Google Analytics 4 + Google Ads com Consent Mode v2 (modo básico: nada carrega sem consentimento) */
+  const ADS = S.googleAds || {};
+  let tagsCarregadas = false;
+  const consentimento = (c) => ({
+    analytics_storage: c.estatistica ? "granted" : "denied",
+    ad_storage: c.marketing ? "granted" : "denied",
+    ad_user_data: c.marketing ? "granted" : "denied",
+    ad_personalization: c.marketing ? "granted" : "denied",
+  });
+  const carregarTags = (c) => {
+    if (!c || !(c.estatistica || c.marketing)) return;
+    const ids = [c.estatistica && S.analytics, c.marketing && ADS.id].filter(Boolean);
+    if (!ids.length) return;
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { dataLayer.push(arguments); };
-    gtag("js", new Date()); gtag("config", S.analytics, { anonymize_ip: true });
+    window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+    if (tagsCarregadas) { gtag("consent", "update", consentimento(c)); ids.forEach((id) => gtag("config", id)); return; }
+    tagsCarregadas = true;
+    gtag("consent", "default", consentimento(c));
+    gtag("js", new Date());
+    ids.forEach((id) => gtag("config", id));
+    const s = document.createElement("script");
+    s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${ids[0]}`;
+    document.head.appendChild(s);
   };
+  /* Conversões: formulário enviado e clique no WhatsApp */
+  window.mdConversao = (tipo) => {
+    if (!window.gtag) return;
+    const c = lerConsent() || {};
+    if (c.estatistica && S.analytics) gtag("event", tipo === "formulario" ? "generate_lead" : "contacto_whatsapp", { metodo: tipo });
+    const rotulo = ADS.conversoes?.[tipo];
+    if (c.marketing && ADS.id && rotulo) gtag("event", "conversion", { send_to: `${ADS.id}/${rotulo}` });
+  };
+  document.addEventListener("click", (e) => { if (e.target.closest('a[href*="wa.me/"]')) window.mdConversao("whatsapp"); });
   function mostrarCookies() {
     const c = lerConsent();
-    if (c) { if (c.estatistica) carregarAnalytics(); return; }
+    if (c) { carregarTags(c); return; }
     setTimeout(() => (ban.hidden = false), 1800);
   }
   ban.addEventListener("click", (e) => {
     const b = e.target.closest("[data-cookies]");
     if (!b) return;
     const acao = b.dataset.cookies;
+    const op = $(".cookies-opcoes");
+    let escolha;
     if (acao === "personalizar") {
-      const op = $(".cookies-opcoes");
       if (op.hidden) { op.hidden = false; b.textContent = "Guardar escolhas"; return; }
-      const est = op.querySelector('[name="estatistica"]').checked;
-      gravar({ estatistica: est }); if (est) carregarAnalytics();
+      escolha = { estatistica: op.querySelector('[name="estatistica"]').checked, marketing: op.querySelector('[name="marketing"]').checked };
     } else {
-      gravar({ estatistica: acao === "aceitar" });
-      if (acao === "aceitar") carregarAnalytics();
+      const sim = acao === "aceitar";
+      escolha = { estatistica: sim, marketing: sim };
     }
+    gravar(escolha);
+    carregarTags(escolha);
+    if (tagsCarregadas && !escolha.estatistica && !escolha.marketing) gtag("consent", "update", consentimento(escolha));
     ban.hidden = true;
   });
   $(".link-cookies").addEventListener("click", () => { ban.hidden = false; });

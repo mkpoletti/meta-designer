@@ -28,7 +28,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fontes/general-sans-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fontes/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="estilo.css?v=20261116b">
+  <link rel="stylesheet" href="estilo.css?v=20261117">
 
   <script type="application/ld+json">
 {
@@ -44,7 +44,7 @@
         "url": "https://metadesigner.site/assets/logo.svg"
       },
       "image": "https://metadesigner.site/assets/img/og.jpg",
-      "description": "Agência de criação de sites profissionais para pequenos negócios em Portugal, prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity).",
+      "description": "Agência de criação de sites profissionais para pequenos negócios em Portugal, com atendimento 100% online a partir do Brasil. Sites prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity).",
       "email": "mike.polettiaarte@gmail.com",
       "telephone": "+55 21 96628-9500",
       "taxID": "38.284.190/0001-99",
@@ -121,30 +121,40 @@
       }
     },
     {
-      "@type": "ProfessionalService",
+      "@type": "Service",
       "@id": "https://metadesigner.site/#servico",
-      "name": "Meta Designer",
+      "name": "Criação de sites profissionais",
+      "serviceType": "Criação de sites",
       "url": "https://metadesigner.site/",
       "image": "https://metadesigner.site/assets/img/og.jpg",
-      "logo": "https://metadesigner.site/assets/logo.svg",
-      "description": "Criação de sites profissionais para pequenos negócios em Portugal, prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity).",
+      "description": "Criação de sites profissionais para pequenos negócios em Portugal, com atendimento 100% online, prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity).",
+      "provider": {
+        "@id": "https://metadesigner.site/#organizacao"
+      },
       "areaServed": {
         "@type": "Country",
         "name": "Portugal"
       },
-      "priceRange": "A partir de 300€",
-      "telephone": "+55 21 96628-9500",
-      "email": "mike.polettiaarte@gmail.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Recreio dos Bandeirantes, Rio de Janeiro",
-        "addressRegion": "RJ",
-        "addressCountry": "BR"
+      "availableChannel": {
+        "@type": "ServiceChannel",
+        "serviceUrl": "https://metadesigner.site/#contacto",
+        "availableLanguage": "pt-PT"
       },
-      "parentOrganization": {
-        "@id": "https://metadesigner.site/#organizacao"
+      "audience": {
+        "@type": "BusinessAudience",
+        "name": "Pequenos negócios em Portugal"
       },
-      "knowsLanguage": "pt-PT",
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "EUR",
+        "price": 300,
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "minPrice": 300,
+          "priceCurrency": "EUR"
+        },
+        "availability": "https://schema.org/InStock"
+      },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "Serviços",
@@ -869,10 +879,11 @@
 </a>
 
 <div class="cookies vidro" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
-  <p>Usamos cookies essenciais para o site funcionar. Com a tua autorização, usamos também cookies de estatística para melhorar o site. <a href="/privacidade#cookies">Saber mais</a></p>
+  <p>Usamos cookies essenciais para o site funcionar. Com a tua autorização, usamos também cookies de estatística, para melhorar o site, e de marketing, para medir os nossos anúncios. <a href="/privacidade#cookies">Saber mais</a></p>
   <div class="cookies-opcoes" hidden>
     <label class="opcao"><input type="checkbox" checked disabled> Essenciais (sempre ativos)</label>
     <label class="opcao"><input type="checkbox" name="estatistica"> Estatística (Google Analytics)</label>
+    <label class="opcao"><input type="checkbox" name="marketing"> Marketing (Google Ads)</label>
   </div>
   <div class="cookies-botoes">
     <button type="button" class="botao botao--pequeno" data-cookies="aceitar">Aceitar</button>
@@ -881,11 +892,11 @@
   </div>
 </div>
 
-<script src="config.js?v=20261116b"></script>
+<script src="config.js?v=20261117"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }</script>
-<script src="app.js?v=20261116b" defer></script>
+<script src="app.js?v=20261117" defer></script>
 </body>
 </html>
