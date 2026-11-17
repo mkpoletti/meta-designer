@@ -16,6 +16,10 @@ const ORIGENS = ["https://metadesigner.site", "https://www.metadesigner.site"];
 export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url);
+    if (pathname === "/api/meta/estado") {
+      // Diagnóstico: diz só se as variáveis existem (nunca mostra os valores)
+      return Response.json({ token: !!env.META_CAPI_TOKEN, modoTeste: !!env.META_TEST_CODE }, { headers: { "Cache-Control": "no-store" } });
+    }
     if (pathname === "/api/meta") {
       if (request.method !== "POST") return new Response(null, { status: 405, headers: { Allow: "POST" } });
       return eventoMeta(request, env);
