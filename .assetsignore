@@ -1,0 +1,7 @@
+# Ficheiros que NÃO são publicados como parte do site
+.git
+.assetsignore
+wrangler.jsonc
+worker
+node_modules
+.wrangler

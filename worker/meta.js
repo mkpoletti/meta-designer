@@ -1,8 +1,8 @@
-// Cloudflare Pages Function: POST /api/meta
+// Cloudflare Worker: POST /api/meta  (o resto do site é servido como ficheiros estáticos)
 // Envia eventos para a API de Conversões da Meta (servidor → Meta), em paralelo com o Pixel do browser.
 // A Meta junta os dois pelo event_id, por isso o mesmo evento não é contado duas vezes.
 //
-// Variáveis no painel da Cloudflare (Pages → metadesigner → Settings → Variables and Secrets):
+// Variáveis no painel da Cloudflare (Workers & Pages → meta-designer → Settings → Variables and Secrets):
 //   META_CAPI_TOKEN   (Secret, obrigatório) token da API de Conversões, gerado no Gerenciador de Eventos
 //   META_PIXEL_ID     (opcional) por defeito 1163218391923665
 //   META_TEST_CODE    (opcional) código "Testar eventos" do Gerenciador de Eventos; apagar depois de testar
@@ -13,7 +13,18 @@
 const EVENTOS = new Set(["PageView", "Lead", "Contact"]);
 const ORIGENS = ["https://metadesigner.site", "https://www.metadesigner.site"];
 
-export async function onRequestPost({ request, env }) {
+export default {
+  async fetch(request, env) {
+    const { pathname } = new URL(request.url);
+    if (pathname === "/api/meta") {
+      if (request.method !== "POST") return new Response(null, { status: 405, headers: { Allow: "POST" } });
+      return eventoMeta(request, env);
+    }
+    return env.ASSETS.fetch(request);
+  },
+};
+
+async function eventoMeta(request, env) {
   const token = env.META_CAPI_TOKEN;
   if (!token) return new Response(null, { status: 204 }); // ainda não configurado: não faz nada
 

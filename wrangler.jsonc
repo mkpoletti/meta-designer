@@ -1,0 +1,16 @@
+// Cloudflare Worker "meta-designer": site estático + /api/meta (API de Conversões da Meta).
+// O deploy é feito pela Cloudflare a cada push no GitHub (npx wrangler deploy).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "meta-designer",
+  "main": "worker/meta.js",
+  "compatibility_date": "2025-10-01",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Só /api/* passa pelo código; tudo o resto vai direto aos ficheiros (mais rápido e grátis)
+    "run_worker_first": ["/api/*"]
+  }
+}
