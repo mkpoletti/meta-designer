@@ -329,6 +329,8 @@ const v3 = new THREE.Vector3();
 
 function frame(agora) {
   if (!ativo) return;
+  // aparelhos fracos/telemóveis: 30 fps chegam para o céu e poupam metade do trabalho
+  if (fraco && agora - ultimo < 30) { requestAnimationFrame(frame); return; }
   const dt = Math.min(0.05, (agora - ultimo) / 1000); ultimo = agora;
   const t = agora / 1000;
   const v = MD.ceu || 0;

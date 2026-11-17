@@ -28,16 +28,18 @@
   let ceuPedido = false;
   const carregarCeu = () => {
     if (ceuPedido) return; ceuPedido = true;
-    import("./ceu.js?v=20261116b").catch(() => document.documentElement.classList.add("sem-webgl"));
+    import("./ceu.js?v=20261117g").catch(() => document.documentElement.classList.add("sem-webgl"));
   };
   const ocioso = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
-  // desktop: assim que o browser fica livre · telemóvel: no 1.º toque/rolagem (ou ao fim de 3,5 s)
-  addEventListener("load", () => (movel() ? setTimeout(carregarCeu, 3500) : ocioso(carregarCeu, { timeout: 2500 })));
+  // desktop: assim que o browser fica livre · telemóvel/tátil: só no 1.º toque ou rolagem
+  // (o WebGL é pesado em telemóveis; até lá o céu é o gradiente CSS, que já acompanha o scroll)
+  addEventListener("load", () => { if (!movel() && !toque) ocioso(carregarCeu, { timeout: 2500 }); });
   ["pointerdown", "touchstart", "wheel", "keydown", "scroll"].forEach((ev) => addEventListener(ev, carregarCeu, { once: true, passive: true }));
 
   /* ── Smooth scroll (Lenis) + ScrollTrigger ────────────────── */
   let lenis = null;
-  if (!reduzir && window.Lenis) {
+  // Lenis só suaviza a roda do rato: em ecrãs táteis não traz nada e custava um ciclo por frame
+  if (!reduzir && !toque && window.Lenis) {
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     if (window.gsap) {
       gsap.registerPlugin(ScrollTrigger);
@@ -432,7 +434,7 @@
   function mostrarCookies() {
     const c = lerConsent();
     if (c) { carregarTags(c); return; }
-    setTimeout(() => (ban.hidden = false), 1800);
+    setTimeout(() => (ban.hidden = false), 300);
   }
   ban.addEventListener("click", (e) => {
     const b = e.target.closest("[data-cookies]");
@@ -476,17 +478,36 @@
   const progresso = (el) => { const g = G_(el); return lim((scrollY - g.top) / Math.max(1, g.h - innerHeight)); };
   const topoDoc = (el) => G_(el).top;
   const caixa = (el) => { const g = G_(el), top = g.top - scrollY; return { top, height: g.h, bottom: top + g.h }; };
-  medir();
-  addEventListener("resize", medir);
-  addEventListener("load", medir);
-  if (document.fonts) document.fonts.ready.then(medir);
-  if (window.ResizeObserver) new ResizeObserver(medir).observe(document.body);
+  // Depois de medir, força alguns frames completos para aplicar a nova geometria
+  let forcar = 3;
+  const remedir = () => { medir(); forcar = 3; };
+  remedir();
+  addEventListener("resize", remedir);
+  addEventListener("load", remedir);
+  if (document.fonts) document.fonts.ready.then(remedir);
+  if (window.ResizeObserver) new ResizeObserver(remedir).observe(document.body);
   let corTopo = "", corHor = "";
 
+  // A órbita só gira enquanto está no ecrã
+  let orbVisivel = false;
+  new IntersectionObserver(([e]) => (orbVisivel = e.isIntersecting)).observe($(".integra"));
+
   let ultimoY = scrollY, pilarAtivo = 0, mGia = 0, ultimoT = performance.now();
+  let yFeito = NaN, vhFeito = 0, rotFeita = NaN;
   const ciclo = (agora) => {
     const dt = Math.min(0.05, (agora - ultimoT) / 1000); ultimoT = agora;
     const y = scrollY, vh = innerHeight;
+
+    // Sem scroll, sem redimensionar e sem animação da galeria: não há nada a recalcular.
+    // (antes o ciclo reescrevia dezenas de estilos a cada frame, mesmo parado, e prendia o telemóvel)
+    const rotAtual = rotArrasto - rotEntrada;
+    if (y === yFeito && vh === vhFeito && rotAtual === rotFeita && forcar <= 0) {
+      MD.velocidade *= 0.9;
+      if (orbVisivel) girarOrbita(dt);
+      requestAnimationFrame(ciclo);
+      return;
+    }
+    yFeito = y; vhFeito = vh; rotFeita = rotAtual; if (forcar > 0) forcar--;
     const docH = docAlt - vh;
     MD.total = lim(y / Math.max(1, docH));
     MD.velocidade = lerp(MD.velocidade, Math.abs(y - ultimoY) / Math.max(dt, 0.001) / 1000, 0.1);
@@ -574,17 +595,7 @@
     gia.classList.toggle("fim", q > 0.88);
 
     // órbita (o scroll acelera)
-    const orbW = orbLarg;
-    if (!reduzir && orbW > 0) {
-      orbAng += dt * (0.12 + Math.min(MD.velocidade, 4) * 0.5);
-      const R = Math.min(230, orbW * 0.38);
-      orbIcones.forEach((o) => {
-        const a = o.a0 + orbAng, x = Math.cos(a) * R, yv = Math.sin(a) * R;
-        o.el.style.transform = `translate(${x.toFixed(1)}px, ${yv.toFixed(1)}px)`;
-        const k = 600 / orbW;
-        o.ln.setAttribute("x2", (x * k).toFixed(1)); o.ln.setAttribute("y2", (yv * k).toFixed(1));
-      });
-    }
+    if (orbVisivel) girarOrbita(dt);
 
     // rodapé: palavra gigante enche da esquerda para a direita
     const rr = caixa(rodape);
@@ -598,6 +609,19 @@
 
     requestAnimationFrame(ciclo);
   };
+
+  function girarOrbita(dt) {
+    const orbW = orbLarg;
+    if (reduzir || orbW <= 0) return;
+    orbAng += dt * (0.12 + Math.min(MD.velocidade, 4) * 0.5);
+    const R = Math.min(230, orbW * 0.38);
+    orbIcones.forEach((o) => {
+      const a = o.a0 + orbAng, x = Math.cos(a) * R, yv = Math.sin(a) * R;
+      o.el.style.transform = `translate(${x.toFixed(1)}px, ${yv.toFixed(1)}px)`;
+      const k = 600 / orbW;
+      o.ln.setAttribute("x2", (x * k).toFixed(1)); o.ln.setAttribute("y2", (yv * k).toFixed(1));
+    });
+  }
 
   const PALETA = [["#7DB8FF", "#DCEEFF"], ["#4A90F0", "#CFE6FF"], ["#F6B27A", "#FFE3C2"], ["#1C2B54", "#6D6A9C"]];
   const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
