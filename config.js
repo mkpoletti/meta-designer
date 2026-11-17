@@ -7,7 +7,8 @@ window.SITE = {
   },
 
   contato: {
-    email: "mike.polettiaarte@gmail.com",
+    // Código do FormSubmit (substitui o e-mail no endereço do formulário; o e-mail de destino fica escondido)
+    formsubmitId: "1e24b370686fa1bb106bf4673cb24437",
     // Opcional: chave do Web3Forms (https://web3forms.com). Se vazio, usa FormSubmit.
     web3formsChave: "",
     assunto: "Novo contacto pelo site Meta Designer",

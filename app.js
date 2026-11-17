@@ -330,7 +330,7 @@
     const assunto = S.contato?.assunto || "Novo contacto pelo site";
     let url, corpo;
     if (S.contato?.web3formsChave) { url = "https://api.web3forms.com/submit"; corpo = { access_key: S.contato.web3formsChave, subject: assunto, from_name: S.nome, ...dados }; }
-    else { url = `https://formsubmit.co/ajax/${encodeURIComponent(S.contato?.email || "")}`; corpo = { _subject: assunto, _template: "table", _captcha: "false", ...dados }; }
+    else { url = `https://formsubmit.co/ajax/${encodeURIComponent(S.contato?.formsubmitId || S.contato?.email || "")}`; corpo = { _subject: assunto, _template: "table", _captcha: "false", ...dados }; }
     const botao = form.querySelector("button[type=submit]");
     botao.disabled = true;
     status.className = "form-status"; status.textContent = "A enviar…";
