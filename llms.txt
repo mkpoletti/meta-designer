@@ -1,9 +1,9 @@
 # Meta Designer
 
-> A Meta Designer cria sites profissionais para pequenos negócios em Portugal, prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity). Preço a partir de 300€.
+> A Meta Designer cria sites profissionais com animações para negócios em Portugal, rápidos no telemóvel e prontos para o Google e para os buscadores de IA (ChatGPT, Gemini e Perplexity). Preço desde 300€.
 
 ## Serviço
-- Sites profissionais com design à medida da marca, pensados primeiro para o telemóvel.
+- Sites profissionais com design exclusivo e animações, pensados primeiro para o telemóvel.
 - SEO (Google) e GEO (buscadores de IA) incluídos: estrutura, velocidade, textos otimizados e dados estruturados.
 - Ligação ao Google Maps para pesquisa local.
 - WhatsApp e formulários de contacto integrados.
@@ -13,7 +13,8 @@
 
 ## Preço e prazos
 - A partir de 300€.
-- Um site de uma página fica online em 2 a 5 dias úteis. Sites maiores dependem do tamanho e da estrutura.
+- Um site de uma página fica online em 2 a 5 dias úteis depois de recebidos os conteúdos. Sites maiores dependem do tamanho e da estrutura.
+- Pagamento em euros por transferência para conta europeia (IBAN). Fatura internacional de prestação de serviços com o NIF do cliente.
 - Conversa inicial grátis de 15 minutos para definir o que é preciso e quanto custa.
 
 ## Zona de atuação
@@ -54,7 +55,9 @@
 ## Perguntas frequentes
 - **O que é estar pronto para os buscadores de IA?** É ter um site que o ChatGPT, o Gemini e o Perplexity conseguem ler, entender e citar.
 - **Isto garante que apareço em primeiro no Google?** Ninguém pode garantir isso. Garantimos um site preparado para competir.
-- **Quanto tempo demora?** Depende do tamanho e da estrutura do site. Um site de uma página fica online em 2 a 5 dias úteis.
+- **Quanto tempo demora?** Um site de uma página fica online em 2 a 5 dias úteis depois de recebermos os conteúdos. Sites maiores dependem do tamanho e da estrutura.
 - **O domínio e o alojamento estão incluídos?** Depende do plano que escolheres. Explicamos-te tudo na conversa grátis de 15 minutos, antes de avançares.
 - **Posso editar o site sozinho?** Sim. Mostramos-te como, em 15 minutos.
-- **Emitem fatura?** Sim, com NIF.
+- **Emitem fatura?** Sim. Emitimos fatura internacional de prestação de serviços com o teu NIF. O teu contabilista regista-a como serviço adquirido a uma empresa estrangeira, e o IVA é tratado pela autoliquidação. Explicamos tudo antes de avançares.
+- **Como é o pagamento?** Por transferência bancária em euros, para uma conta europeia (IBAN). Pagas como pagarias a qualquer fornecedor em Portugal.
+- **De onde trabalham?** A Meta Designer é um estúdio brasileiro que cria sites para negócios em Portugal. Trabalhamos 100% online, em português de Portugal, por videochamada, WhatsApp e e-mail, com atendimento ajustado ao horário português.
