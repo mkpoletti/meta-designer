@@ -39,6 +39,13 @@ PAGINAS_MENU = [
     ("/sites-para-imobiliarias", "Sites para imobiliárias"),
     ("/quanto-custa-um-site", "Quanto custa um site"),
     ("/aparecer-no-chatgpt", "Como aparecer no ChatGPT"),
+    ("/criacao-de-sites-braga", "Criação de sites em Braga"),
+    ("/criacao-de-sites-coimbra", "Criação de sites em Coimbra"),
+    ("/criacao-de-sites-algarve", "Criação de sites no Algarve"),
+    ("/criacao-de-sites-madeira", "Criação de sites na Madeira"),
+    ("/sites-para-clinicas", "Sites para clínicas e saúde"),
+    ("/sites-para-restaurantes", "Sites para restaurantes"),
+    ("/sites-para-alojamento-local", "Sites para alojamento local"),
 ]
 
 PROCESSO = """
@@ -383,6 +390,146 @@ P.append(dict(
     ],
     chamada_titulo="Queres que a IA <em>recomende o teu negócio?</em>",
     chamada_texto="Criamos sites preparados para o Google e para a IA. Fala connosco: a conversa é grátis.",
+))
+
+
+FAQ_CIDADE = lambda cidade: [
+    (f"Quanto custa criar um site em {cidade}?", "Os sites da Meta Designer começam nos 300€. O valor final depende do número de páginas e das funcionalidades, e dizemos-te o preço exato numa conversa grátis de 15 minutos."),
+    ("Preciso de reunir presencialmente?", "Não. A Meta Designer é um estúdio brasileiro que trabalha 100% online para negócios em Portugal, em português de Portugal, por videochamada, WhatsApp e e-mail."),
+    ("Quanto tempo demora?", "Um site de uma página fica online em 2 a 5 dias úteis depois de recebermos os conteúdos. Sites maiores dependem do tamanho e da estrutura."),
+    ("O site aparece no Google Maps?", "Ligamos o site ao teu perfil do Google Maps e indicamos a tua zona de atuação nos textos e nos dados estruturados. A posição no mapa depende também do teu perfil e das avaliações."),
+]
+
+
+def cidade(caminho, nome, prep, regiao, intro, contexto, zonas, proj, nota_proj=""):
+    return dict(
+        caminho=caminho, tipo="servico", migalha=f"Criação de sites {prep} {nome}",
+        servico=f"Criação de sites {prep} {nome}",
+        area={"@type": "AdministrativeArea" if regiao else "City", "name": nome, "containedInPlace": {"@type": "Country", "name": "Portugal"}},
+        titulo=f"Criação de Sites {prep} {nome} desde 300€ | Meta Designer",
+        descricao=f"Criação de sites profissionais para negócios {prep} {nome}: design com animações, rápido no telemóvel e pronto para o Google e para a IA. Desde 300€, atendimento online.",
+        etiqueta=f"Web design · {nome}", h1_texto=f"Criação de sites {prep} {nome}",
+        h1=f"Criação de sites <em>{prep} {nome}</em>",
+        resumo=intro,
+        corpo=sec(f"Pensado para <em>quem pesquisa {prep} {nome}</em>", contexto
+                  + f"<h3>Pesquisa local {prep} {nome}</h3><p>Escrevemos os textos com a tua zona de atuação ({zonas}) e ligamos o site ao teu perfil do Google Maps, para que o Google perceba onde estás e a quem serves.</p>")
+              + sec("Como <em>trabalhamos</em>", "<p>Tudo online e em português, com aprovação tua em cada etapa.</p>" + PROCESSO)
+              + sec("O que vem <em>incluído</em>", INCLUIDO)
+              + sec("Projetos <em>do portfólio</em>", (f"<p>{nota_proj}</p>" if nota_proj else "") + projetos(proj)),
+        faq=FAQ_CIDADE(nome),
+        chamada_titulo=f"Tens um negócio <em>{prep} {nome}?</em>",
+        chamada_texto="Conversa grátis de 15 minutos: mostramos-te projetos do teu setor e dizemos-te quanto custa o teu site.",
+    )
+
+
+P.append(cidade("/criacao-de-sites-braga", "Braga", "em", False,
+    "Sites profissionais para negócios de Braga e do Minho, de Guimarães a Barcelos: design exclusivo com animações, perfeito no telemóvel e preparado para o Google e para os buscadores de IA. Desde 300€, com atendimento 100% online.",
+    "<p>Braga é uma das cidades mais jovens do país, com uma universidade forte, uma indústria tecnológica em crescimento e muito comércio e serviços de proximidade. É um público que pesquisa no telemóvel e decide depressa.</p><p>Um site rápido, claro e com contacto a um toque faz a diferença entre receber o pedido ou vê-lo ir para o concorrente da rua ao lado.</p>",
+    "centro histórico, Maximinos, São Victor, Guimarães, Barcelos, Vila Verde", ["cdt", "gaspar", "legatus", "dentix"]))
+
+P.append(cidade("/criacao-de-sites-coimbra", "Coimbra", "em", False,
+    "Sites profissionais para negócios de Coimbra e da Região Centro: design exclusivo com animações, rápido no telemóvel e pronto para o Google e para a IA. Desde 300€, com atendimento 100% online em português.",
+    "<p>Coimbra junta saúde, ensino e turismo: clínicas e consultórios, explicações e formação, restauração e alojamento. Em todos estes setores, a primeira impressão acontece no Google, muitas vezes antes de o cliente saber o teu nome.</p><p>Por isso desenhamos o site a partir do que as pessoas pesquisam em Coimbra e das dúvidas que têm antes de ligar.</p>",
+    "Baixa, Celas, Solum, Santa Clara, Figueira da Foz, Cantanhede", ["oralplus", "funchal", "gaspar", "conecta"]))
+
+P.append(cidade("/criacao-de-sites-algarve", "Algarve", "no", True,
+    "Sites profissionais para negócios do Algarve, de Faro a Lagos: design exclusivo com animações, perfeito no telemóvel, em português e em inglês quando fizer sentido, e preparado para o Google e para a IA. Desde 300€.",
+    "<p>No Algarve, grande parte dos clientes chega pela pesquisa: turistas à procura de alojamento, restaurantes e experiências, e residentes estrangeiros à procura de serviços. Um site bonito mas lento, ou só em português, perde metade dessas pessoas.</p><p>Criamos sites rápidos, com galeria de impacto, reservas e contacto por WhatsApp, e versão em inglês para o público internacional.</p>",
+    "Faro, Loulé, Albufeira, Portimão, Lagos, Tavira, Vilamoura", ["conecta", "terraco", "serena", "amplify"], "A Serena é um projeto conceito."))
+
+P.append(cidade("/criacao-de-sites-madeira", "Madeira", "na", True,
+    "Sites profissionais para negócios da Madeira, do Funchal ao Porto Santo: design exclusivo com animações, rápido no telemóvel e preparado para o Google e para os buscadores de IA. Desde 300€, com atendimento 100% online.",
+    "<p>Na Madeira, turismo, saúde e serviços vivem da pesquisa online. Quem chega à ilha procura no telemóvel, e quem vive cá compara antes de marcar.</p><p>Já temos clientes na Madeira, como a Clínica em Casa, de saúde ao domicílio no Funchal. Sabemos o que um site tem de mostrar para gerar confiança e contactos na ilha.</p>",
+    "Funchal, Santa Cruz, Câmara de Lobos, Machico, Caniço, Porto Santo", ["funchal", "gaspar", "oralplus", "conecta"]))
+
+P.append(dict(
+    caminho="/sites-para-clinicas", tipo="servico", migalha="Sites para clínicas e saúde",
+    servico="Criação de sites para clínicas, consultórios e profissionais de saúde",
+    titulo="Sites para Clínicas, Fisioterapia e Saúde | Meta Designer",
+    descricao="Criação de sites para clínicas, fisioterapia, nutrição e saúde ao domicílio em Portugal: confiança, especialidades claras e marcação por WhatsApp. Desde 300€.",
+    etiqueta="Saúde e bem-estar", h1_texto="Sites para clínicas e profissionais de saúde",
+    h1="Sites para <em>clínicas e saúde</em>",
+    resumo="Criamos sites para clínicas, consultórios, fisioterapia, nutrição e saúde ao domicílio em Portugal: transmitem confiança, explicam cada serviço com clareza e levam o paciente a marcar pelo WhatsApp ou formulário. Desde 300€.",
+    corpo=sec("O que um paciente <em>precisa de ver</em>",
+              "<ul class=\"lista-check\">"
+              "<li><strong>Serviços e especialidades</strong> explicados em linguagem simples.</li>"
+              "<li><strong>Equipa, formação e instalações</strong> com fotografia real.</li>"
+              "<li><strong>Marcação a um toque</strong> por WhatsApp, telefone ou formulário.</li>"
+              "<li><strong>Zona de atendimento</strong>, horários e acordos ou seguros aceites.</li>"
+              "<li><strong>Perguntas frequentes</strong> que respondem às dúvidas antes da primeira consulta.</li>"
+              "</ul>"
+              "<p>Para clínicas dentárias temos uma página própria: <a href=\"/sites-para-clinicas-dentarias\">sites para clínicas dentárias</a>.</p>")
+          + sec("Projetos <em>de saúde e bem-estar</em>", "<p>A Serena é um projeto conceito.</p>" + projetos(["gaspar", "funchal", "serena", "oralplus"]))
+          + sec("Como <em>trabalhamos</em>", PROCESSO)
+          + sec("O que vem <em>incluído</em>", INCLUIDO),
+    faq=[
+        ("Quanto custa um site para uma clínica?", "Desde 300€. Clínicas com várias especialidades costumam precisar de mais páginas; numa conversa grátis de 15 minutos dizemos-te o valor exato."),
+        ("Posso ligar o site ao meu sistema de marcações?", "Sim, se o sistema tiver ligação ou página de marcação online. Avaliamos contigo na conversa inicial."),
+        ("Os dados dos pacientes ficam protegidos?", "O site usa ligação cifrada (HTTPS), formulários com consentimento e política de privacidade conforme o RGPD."),
+        ("Fazem sites para saúde ao domicílio?", "Sim. A Clínica em Casa, no Funchal, é um dos nossos clientes de saúde ao domicílio."),
+    ],
+    chamada_titulo="Mais pacientes a <em>marcar pelo site</em>.",
+    chamada_texto="Conversa grátis de 15 minutos: dizemos-te o que precisas, quanto custa e quando fica pronto.",
+))
+
+P.append(dict(
+    caminho="/sites-para-restaurantes", tipo="servico", migalha="Sites para restaurantes",
+    servico="Criação de sites para restaurantes, cafés e pastelarias",
+    titulo="Sites para Restaurantes, Cafés e Pastelarias | Meta Designer",
+    descricao="Criação de sites para restaurantes em Portugal: menu sempre atualizado, reservas por WhatsApp, fotos que dão fome e presença no Google Maps. Desde 300€.",
+    etiqueta="Restauração", h1_texto="Sites para restaurantes",
+    h1="Sites para <em>restaurantes</em>",
+    resumo="Criamos sites para restaurantes, cafés e pastelarias em Portugal: menu fácil de atualizar, reservas por WhatsApp, fotografia que abre o apetite e ligação ao Google Maps. Desde 300€.",
+    corpo=sec("O que quem procura <em>onde comer</em> quer ver",
+              "<p>Quem pesquisa um restaurante quer saber três coisas, quase sempre no telemóvel: o que se come, quanto custa e se há mesa. Tudo o resto é secundário.</p>"
+              "<ul class=\"lista-check\">"
+              "<li><strong>Menu em texto</strong>, não em PDF: o Google lê-o e o cliente vê-o sem fazer zoom.</li>"
+              "<li><strong>Reservas por WhatsApp</strong> ou ligação ao teu sistema de reservas.</li>"
+              "<li><strong>Fotografia de impacto</strong> dos pratos e do espaço.</li>"
+              "<li><strong>Horários, localização e estacionamento</strong> ligados ao Google Maps.</li>"
+              "<li><strong>Versão em inglês</strong> para zonas turísticas.</li>"
+              "</ul>")
+          + sec("O nosso <em>portfólio</em>", "<p>Ainda não temos restaurantes no portfólio público. Estes são exemplos do nível de design e de detalhe que trazemos a cada projeto (a Serena é um projeto conceito).</p>" + projetos(["serena", "conecta", "amplify", "terraco"]))
+          + sec("Como <em>trabalhamos</em>", PROCESSO)
+          + sec("O que vem <em>incluído</em>", INCLUIDO),
+    faq=[
+        ("Quanto custa um site para um restaurante?", "Desde 300€ para uma página com menu, galeria, horários e reservas. Dizemos-te o valor exato numa conversa grátis de 15 minutos."),
+        ("Consigo atualizar o menu sozinho?", "Sim. Mostramos-te como, em 15 minutos."),
+        ("O site pode receber reservas?", "Sim: por WhatsApp, por formulário ou com ligação ao sistema de reservas que já usas."),
+        ("Vale a pena ter site se já estou no Instagram e no Google Maps?", "Sim. O site é o único canal que é teu, aparece nas pesquisas do Google e da IA e junta menu, reservas e contactos num só sítio."),
+    ],
+    chamada_titulo="Mais mesas cheias <em>a partir do Google</em>.",
+    chamada_texto="Fala connosco: a conversa é grátis e sem compromisso.",
+))
+
+P.append(dict(
+    caminho="/sites-para-alojamento-local", tipo="servico", migalha="Sites para alojamento local",
+    servico="Criação de sites para alojamento local, guest houses e turismo rural",
+    titulo="Sites para Alojamento Local e Guest Houses | Meta Designer",
+    descricao="Criação de sites para alojamento local, guest houses e turismo rural em Portugal: reservas diretas, galeria de impacto, português e inglês. Desde 300€.",
+    etiqueta="Turismo", h1_texto="Sites para alojamento local",
+    h1="Sites para <em>alojamento local</em>",
+    resumo="Criamos sites para alojamento local, guest houses e turismo rural em Portugal: galeria de impacto, reservas diretas por WhatsApp ou motor de reservas, e versão em português e inglês. Desde 300€.",
+    corpo=sec("Mais <em>reservas diretas</em>",
+              "<p>As plataformas de reservas trazem hóspedes, mas cobram comissão em cada estadia. Um site próprio dá-te um canal direto para quem já te conhece, para quem volta e para quem te encontra no Google.</p>"
+              "<ul class=\"lista-check\">"
+              "<li><strong>Galeria e vídeo</strong> que mostram a luz, a vista e os quartos.</li>"
+              "<li><strong>Reserva direta</strong> por WhatsApp, formulário ou ligação ao teu motor de reservas.</li>"
+              "<li><strong>Português e inglês</strong> para o público internacional.</li>"
+              "<li><strong>O que fazer na zona</strong>, que responde a pesquisas e à IA.</li>"
+              "<li><strong>Número de registo de AL</strong> visível, como a lei exige.</li>"
+              "</ul>")
+          + sec("Projetos <em>do portfólio</em>", "<p>A Residência Nevogilde é um projeto conceito.</p>" + projetos(["conecta", "nevogilde", "terraco", "amplify"]))
+          + sec("Como <em>trabalhamos</em>", PROCESSO)
+          + sec("O que vem <em>incluído</em>", INCLUIDO),
+    faq=[
+        ("Quanto custa um site para alojamento local?", "Desde 300€. Sites com várias unidades, motor de reservas ou várias línguas têm outro valor; dizemos-te qual numa conversa grátis."),
+        ("O site pode ligar ao meu motor de reservas?", "Sim, se o teu motor tiver widget ou página de reserva. Avaliamos contigo na conversa inicial."),
+        ("Faz sentido ter site se já estou no Booking e no Airbnb?", "Sim: o site traz reservas diretas sem comissão, sobretudo de hóspedes que voltam ou que te encontram no Google."),
+        ("O site pode ter versão em inglês?", "Sim, e para alojamento local recomendamos."),
+    ],
+    chamada_titulo="Mais reservas, <em>menos comissões</em>.",
+    chamada_texto="Conversa grátis de 15 minutos para veres o que um site pode fazer pelo teu alojamento.",
 ))
 
 
