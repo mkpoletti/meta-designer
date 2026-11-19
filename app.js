@@ -1,6 +1,15 @@
 /* Meta Designer · interações 2D e scroll */
 (() => {
   const S = window.SITE || {};
+  // Textos da interface. A página do Brasil (brasil.html) troca-os por SITE.textos (pt-BR).
+  const TX = Object.assign({
+    perguntas: ["Quanto tempo demora o meu site?", "Vou aparecer no Google?", "E no ChatGPT?", "Funciona bem no telemóvel?"],
+    buscas: ["dentista em lisboa", "fisioterapia lisboa", "advogado cascais"],
+    whatsProjeto: "Olá! Vi o projeto {nome} no vosso portfólio e gostava de saber mais sobre um site para o meu negócio.",
+    erroNome: "Indica o teu nome.", erroTel: "Indica um número válido.", erroNegocio: "Diz-nos qual é o teu negócio.",
+    erroOpcao: "Escolhe uma opção.", erroPrivacidade: "Para continuar, aceita a Política de Privacidade.",
+    erroRever: "Revê os campos assinalados.", aEnviar: "A enviar…", falhaEnvio: "Não foi possível enviar agora. Fala connosco no WhatsApp.",
+  }, S.textos || {});
   const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const movel = () => innerWidth <= 760;
   const toque = matchMedia("(hover: none)").matches;
@@ -120,8 +129,8 @@
     };
     passo();
   };
-  escrever($(".pp-texto"), ["Quanto tempo demora o meu site?", "Vou aparecer no Google?", "E no ChatGPT?", "Funciona bem no telemóvel?"], { pausa: 2000 });
-  escrever($(".pv-busca-txt"), ["dentista em lisboa", "fisioterapia lisboa", "advogado cascais"], { vel: 70, pausa: 5200 });
+  escrever($(".pp-texto"), TX.perguntas, { pausa: 2000 });
+  escrever($(".pv-busca-txt"), TX.buscas, { vel: 70, pausa: 5200 });
 
   /* ── Galeria em cilindro ──────────────────────────────────── */
   const cil = $(".cilindro"), anel = $(".cilindro-anel");
@@ -209,7 +218,7 @@
     ecra.classList.toggle("longo", !!p.longo);
     ecra.scrollTop = 0;
     const im = $("img", ecra); im.src = p.longo || p.src; im.alt = p.alt;
-    $(".projeto-vis-whats", vis).href = `https://wa.me/${numWhats}?text=${encodeURIComponent(`Olá! Vi o projeto ${p.nome} no vosso portfólio e gostava de saber mais sobre um site para o meu negócio.`)}`;
+    $(".projeto-vis-whats", vis).href = `https://wa.me/${numWhats}?text=${encodeURIComponent(TX.whatsProjeto.replace("{nome}", p.nome))}`;
     vis.hidden = false;
     requestAnimationFrame(() => vis.classList.add("aberto"));
     $(".projeto-vis-fechar", vis).focus();
@@ -296,15 +305,16 @@
   /* ── Formulário ───────────────────────────────────────────── */
   const form = $(".form");
   const regras = {
-    "Nome": (v) => (v.trim().length >= 2 ? "" : "Indica o teu nome."),
-    "Telemóvel ou WhatsApp": (v) => (/^\+?[\d\s().-]{9,20}$/.test(v.trim()) && v.replace(/\D/g, "").length >= 9 ? "" : "Indica um número válido."),
-    "Tipo de negócio": (v) => (v.trim().length >= 2 ? "" : "Diz-nos qual é o teu negócio."),
+    "Nome": (v) => (v.trim().length >= 2 ? "" : TX.erroNome),
+    "Telemóvel ou WhatsApp": (v) => (/^\+?[\d\s().-]{9,20}$/.test(v.trim()) && v.replace(/\D/g, "").length >= 9 ? "" : TX.erroTel),
+    "WhatsApp": (v) => (/^\+?[\d\s().-]{9,20}$/.test(v.trim()) && v.replace(/\D/g, "").length >= 10 ? "" : TX.erroTel),
+    "Tipo de negócio": (v) => (v.trim().length >= 2 ? "" : TX.erroNegocio),
   };
   const validar = (campo) => {
     const box = campo.closest(".campo");
     let msg = "";
-    if (campo.type === "radio") msg = form.querySelector(`[name="${campo.name}"]:checked`) ? "" : "Escolhe uma opção.";
-    else if (campo.type === "checkbox") msg = campo.checked ? "" : "Para continuar, aceita a Política de Privacidade.";
+    if (campo.type === "radio") msg = form.querySelector(`[name="${campo.name}"]:checked`) ? "" : TX.erroOpcao;
+    else if (campo.type === "checkbox") msg = campo.checked ? "" : TX.erroPrivacidade;
     else msg = regras[campo.name] ? regras[campo.name](campo.value) : "";
     box.classList.toggle("erro", !!msg);
     box.querySelector(".campo-erro").textContent = msg;
@@ -326,7 +336,7 @@
       if (c.type === "radio") { if (vistos.has(c.name)) return; vistos.add(c.name); }
       if (!validar(c)) ok = false;
     });
-    if (!ok) { status.className = "form-status falha"; status.textContent = "Revê os campos assinalados."; form.querySelector(".erro input")?.focus(); return; }
+    if (!ok) { status.className = "form-status falha"; status.textContent = TX.erroRever; form.querySelector(".erro input")?.focus(); return; }
     const dados = Object.fromEntries(new FormData(form));
     delete dados._honey;
     const assunto = S.contato?.assunto || "Novo contacto pelo site";
@@ -335,7 +345,7 @@
     else { url = `https://formsubmit.co/ajax/${encodeURIComponent(S.contato?.formsubmitId || S.contato?.email || "")}`; corpo = { _subject: assunto, _template: "table", _captcha: "false", ...dados }; }
     const botao = form.querySelector("button[type=submit]");
     botao.disabled = true;
-    status.className = "form-status"; status.textContent = "A enviar…";
+    status.className = "form-status"; status.textContent = TX.aEnviar;
     try {
       const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(corpo) });
       const j = await r.json().catch(() => ({}));
@@ -350,7 +360,7 @@
     } catch (e) {
       console.warn("Falha no envio:", e);
       status.className = "form-status falha";
-      status.textContent = "Não foi possível enviar agora. Fala connosco no WhatsApp.";
+      status.textContent = TX.falhaEnvio;
     } finally { botao.disabled = false; }
   });
 
@@ -421,11 +431,12 @@
   window.mdConversao = (tipo) => {
     const c = lerConsent() || {};
     // Meta: Lead = formulário enviado, Contact = clique no WhatsApp
-    if (c.marketing) metaEvento(tipo === "formulario" ? "Lead" : "Contact", { content_name: tipo });
+    const pais = S.pais || "PT"; // PT = página de Portugal, BR = página do Brasil (/br)
+    if (c.marketing) metaEvento(tipo === "formulario" ? "Lead" : "Contact", { content_name: tipo, content_category: pais });
     if (!window.gtag) return;
     if ((c.estatistica || c.marketing) && S.analytics) {
       const nome = S.eventosGA4?.[tipo] || (tipo === "formulario" ? "generate_lead" : "contacto_whatsapp");
-      gtag("event", nome, { metodo: tipo, pagina: location.pathname });
+      gtag("event", nome, { metodo: tipo, pagina: location.pathname, pais });
     }
     const rotulo = ADS.conversoes?.[tipo];
     if (c.marketing && ADS.id && rotulo) gtag("event", "conversion", { send_to: `${ADS.id}/${rotulo}` });
