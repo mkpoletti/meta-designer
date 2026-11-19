@@ -146,7 +146,7 @@ def cidade(caminho, nome, prep, uf, intro, contexto, bairros, proj):
         caminho=caminho, tipo="servico", migalha=f"Criação de sites {prep} {nome}",
         servico=f"Criação de sites {prep} {nome}",
         area={"@type": "City", "name": nome, "containedInPlace": {"@type": "State", "name": uf}},
-        titulo=f"Criação de Sites {prep.capitalize()} {nome} | Meta Designer",
+        titulo=f"Criação de Sites {prep} {nome} | Meta Designer",
         descricao=f"Criação de sites profissionais para empresas {prep} {nome}: design exclusivo com animações, rápido no celular e pronto para o Google e o ChatGPT. Orçamento pelo WhatsApp.",
         etiqueta=f"Web design · {nome}", h1=f"Criação de sites <em>{prep} {nome}</em>",
         resumo=intro,
