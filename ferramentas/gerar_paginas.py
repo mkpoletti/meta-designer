@@ -533,13 +533,11 @@ P.append(dict(
 ))
 
 
-def main():
-    for p in P:
-        destino = SITE / (p["caminho"].strip("/") + ".html")
-        destino.write_text(pagina(p), encoding="utf-8")
-        print("ok", destino.name)
-    # sitemap
+def escrever_sitemap():
+    """Sitemap com Portugal (raiz) e Brasil (/br). Usado por este gerador e pelo gerar_paginas_br.py."""
+    import gerar_paginas_br as br
     urls = [("/", "1.0", "monthly")] + [(p["caminho"], "0.8" if p["tipo"] == "servico" else "0.7", "monthly") for p in P] + [("/privacidade", "0.3", None), ("/termos", "0.3", None)]
+    urls += [("/br", "0.9", "monthly")] + [(p["caminho"], "0.8", "monthly") for p in br.P_BR] + [(p["caminho"], "0.3", None) for p in br.P_LEGAL]
     linhas = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u, pr, cf in urls:
         cfx = f"<changefreq>{cf}</changefreq>" if cf else ""
@@ -547,6 +545,14 @@ def main():
     linhas.append("</urlset>")
     (SITE / "sitemap.xml").write_text("\n".join(linhas) + "\n", encoding="utf-8")
     print("ok sitemap.xml", len(urls), "URLs")
+
+
+def main():
+    for p in P:
+        destino = SITE / (p["caminho"].strip("/") + ".html")
+        destino.write_text(pagina(p), encoding="utf-8")
+        print("ok", destino.name)
+    escrever_sitemap()
 
 
 if __name__ == "__main__":
