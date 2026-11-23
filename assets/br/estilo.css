@@ -50,7 +50,7 @@ section{position:relative;padding-inline:max(24px,calc((100vw - var(--larg))/2))
 
 /* ---------- hero ---------- */
 .hero{min-height:1010px;padding-top:215px;overflow:hidden}
-.hero-brilho{position:absolute;left:50%;top:360px;width:900px;height:520px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(13,98,255,.38),transparent);filter:blur(40px);pointer-events:none}
+.hero-brilho{position:absolute;left:50%;top:360px;width:900px;height:520px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(13,98,255,.36),rgba(13,98,255,.16) 50%,rgba(13,98,255,.04) 78%,transparent);pointer-events:none}
 .hero-texto{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center}
 .titulo-hero{font-size:clamp(44px,5.85vw,86px);font-weight:600;line-height:1.04;letter-spacing:-.045em;background:linear-gradient(180deg,#F4F4F1 10%,#9A9AA2);-webkit-background-clip:text;background-clip:text;color:transparent;max-width:1050px}
 .titulo-hero .linha{display:block}
@@ -65,7 +65,7 @@ section{position:relative;padding-inline:max(24px,calc((100vw - var(--larg))/2))
 /* celular */
 .cx-celular{left:4.2%;top:388px;width:210px}
 .cx-celular .aro{position:absolute;inset:0 0 auto;height:214px;border-radius:18px;background:linear-gradient(180deg,#10224A,#0E0E11);box-shadow:0 24px 60px rgba(0,0,0,.55);overflow:hidden}
-.cx-celular .aro::after{content:"";position:absolute;left:-20px;top:40px;width:250px;height:250px;border-radius:50%;border:26px solid rgba(125,184,255,.35);filter:blur(18px)}
+.cx-celular .aro::after{content:"";position:absolute;left:-40px;top:20px;width:290px;height:290px;border-radius:50%;background:radial-gradient(closest-side,transparent 52%,rgba(125,184,255,.28) 70%,rgba(125,184,255,.08) 86%,transparent)}
 .celular{position:relative;margin:26px auto 0;width:150px;height:188px;border-radius:26px 26px 0 0;background:#0A0A0B;border:1px solid #3a3a42;border-bottom:0;padding:6px 6px 0;overflow:hidden}
 .celular .tela{height:100%;border-radius:20px 20px 0 0;overflow:hidden}
 .celular .tela img{width:100%;height:auto;will-change:transform}
@@ -165,7 +165,7 @@ svg .arco{stroke:var(--verde);stroke-linecap:round;transform:rotate(-90deg);tran
 .c-vel,.c-des,.c-goo{min-height:430px;display:flex;flex-direction:column;justify-content:flex-end}
 .arte{position:absolute;inset:0 0 auto;height:270px}
 .mini{position:absolute;left:50%;top:48px;transform:translateX(-50%);width:277px;height:212px;border-radius:22px;background:#0E0E10;border:1px solid var(--linha);padding:16px 18px;overflow:hidden}
-.mini::before{content:"";position:absolute;left:40px;top:70px;width:200px;height:120px;background:rgba(13,98,255,.4);filter:blur(45px)}
+.mini::before{content:"";position:absolute;left:-20px;top:20px;width:320px;height:220px;background:radial-gradient(closest-side,rgba(13,98,255,.38),rgba(13,98,255,.1) 60%,transparent)}
 .mini b{position:relative;color:var(--azul-c);font-size:16px}
 .barras{position:absolute;left:24px;right:24px;bottom:42px;height:110px;display:flex;align-items:flex-end;gap:9px}
 .barras i{flex:1;height:calc(var(--h)*100%);border-radius:5px;background:var(--azul);transform-origin:bottom}
@@ -363,3 +363,10 @@ svg .arco{stroke:var(--verde);stroke-linecap:round;transform:rotate(-90deg);tran
 @media (max-width:640px){.form{grid-template-columns:1fr}}
 /* evita rolagem lateral no celular (cartões e notificações que saem da tela) */
 main,.rodape{overflow-x:clip}
+/* celular: as caixas do hero que começam fora do ecrã só são desenhadas quando a pessoa chega a elas (PageSpeed).
+   padding/margin negativos dão folga às sombras sem mudar o layout; a altura reservada é a real. */
+@media (max-width:860px){
+  .cx-psi,.cx-busca,.cx-ia{content-visibility:auto;padding:40px;margin:-40px}
+  .cx-psi,.cx-ia{contain-intrinsic-block-size:auto 297px}
+  .cx-busca{contain-intrinsic-block-size:auto 276px}
+}
