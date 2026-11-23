@@ -337,3 +337,4 @@ svg .arco{stroke:var(--verde);stroke-linecap:round;transform:rotate(-90deg);tran
 .chamada .cartao .titulo{font-size:clamp(38px,5.4vw,76px)}
 .chamada .cartao .sub{font-size:19px}
 .cookies-opcoes[hidden]{display:none}
+@media (max-width:860px){.marca-gigante{margin-inline:24px;font-size:12.4vw}}
