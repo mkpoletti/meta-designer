@@ -42,55 +42,31 @@ INCLUIDO = """
 </ul>"""
 
 
+BR = dict(pt.PT,
+    lang="pt-BR", locale="pt_BR", inicio="/br", whats=WHATS, cta="Falar no WhatsApp", pular="Pular para o conteúdo",
+    menu=[("/br#portfolio", "Projetos"), ("/br#metodo", "Método"), ("/br#designer", "Designer"), ("/br#duvidas", "Dúvidas")],
+    paginas=PAGINAS_MENU_BR, paginas_titulo="Sites por cidade e setor:",
+    navegacao=[("/br", "Início"), ("/br#portfolio", "Portfólio"), ("/br#metodo", "Como funciona"), ("/br#designer", "Designer"), ("/br#duvidas", "Dúvidas")],
+    contacto=["Rio de Janeiro, RJ", "Atendimento em todo o Brasil", "Online, por vídeo e WhatsApp"],
+    legais=[("/br/privacidade", "Privacidade"), ("/br/termos", "Termos")], outro=("/", "pt-PT", "Portugal"),
+    copy="© 2026 Meta Designer · Estúdio de web design no Rio de Janeiro, atendendo todo o Brasil",
+    flutuante=("Atendimento personalizado", "Fale com o Mike"), whats_label="Falar com o Mike no WhatsApp",
+    ver_projetos="Ver projetos", inicio_nome="Início",
+)
+
+
 def chamada(titulo, texto):
     return f'''<section class="chamada">
   <h2>{titulo}</h2>
   <p>{texto}</p>
-  <div class="botoes"><a class="botao" href="{WHATS}" target="_blank" rel="noopener">Pedir orçamento pelo WhatsApp</a><a class="botao botao--claro" href="/br#contacto">Prefiro que me chamem</a></div>
+  <div class="botoes"><a class="btn-wa" href="{WHATS}" target="_blank" rel="noopener">{pt.SVG_WA}Pedir orçamento pelo WhatsApp</a></div>
+  <p class="nota">Abre o WhatsApp direto, sem preencher nada.</p>
 </section>'''
 
 
 def relacionados(atual):
     links = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in PAGINAS_MENU_BR if u != atual)
-    return f'<section class="cartao"><h2>Veja também</h2><div class="relacionados">{links}<a href="/br#projetos">Ver todos os projetos</a></div></section>'
-
-
-def rodape():
-    menu = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in PAGINAS_MENU_BR)
-    return f'''<footer>
-  <nav aria-label="Páginas"><a href="/br">Início</a>{menu}<a href="/br/privacidade">Privacidade</a><a href="/br/termos">Termos</a><a href="/" hreflang="pt-PT" lang="pt-PT">Portugal</a></nav>
-  © 2026 Meta Designer · Estúdio de web design no Rio de Janeiro, atendendo todo o Brasil · CNPJ 38.284.190/0001-99
-</footer>'''
-
-
-def cabeca(p, url, ld):
-    return f'''<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(p["titulo"])}</title>
-<meta name="description" content="{esc(p["descricao"])}">
-<meta name="robots" content="{p.get("robots", "index, follow, max-image-preview:large")}">
-<link rel="canonical" href="{url}">
-<link rel="alternate" hreflang="pt-BR" href="{url}">
-<meta property="og:type" content="{"article" if p["tipo"] == "guia" else "website"}">
-<meta property="og:url" content="{url}">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:site_name" content="Meta Designer">
-<meta property="og:title" content="{esc(p["titulo"])}">
-<meta property="og:description" content="{esc(p["descricao"])}">
-<meta property="og:image" content="{DOMINIO}/assets/img/og.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#7DB8FF">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fontes/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/paginas.css?v={HOJE.replace("-", "")}">
-<script type="application/ld+json">{ld}</script>
-</head>
-<body>
-<header class="topo"><a href="/br"><img src="/assets/logo.svg" alt="Meta Designer" width="95" height="40"></a><a class="botao" href="{WHATS}" target="_blank" rel="noopener">Pedir orçamento</a></header>
-<nav class="migalhas" aria-label="Caminho"><ol><li><a href="/br">Início</a></li><li aria-current="page">{esc(p["migalha"])}</li></ol></nav>
-'''
+    return f'<section class="bloco"><div class="cartao"><h2>Veja <em>também</em></h2><div class="relacionados">{links}<a href="/br#portfolio">Ver todos os projetos</a></div></div></section>'
 
 
 def pagina(p):
@@ -113,25 +89,9 @@ def pagina(p):
                       "areaServed": p.get("area", {"@type": "Country", "name": "Brasil"})})
     ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False)
     if p["tipo"] == "legal":
-        corpo = f'<main><section class="cartao legal">{p["corpo"]}</section></main>'
-    else:
-        corpo = f'''<main>
-<section class="cartao">
-  <p class="etiqueta">{p["etiqueta"]}</p>
-  <h1>{p["h1"]}</h1>
-  <p class="resumo">{p["resumo"]}</p>
-  <div class="botoes"><a class="botao" href="{WHATS}" target="_blank" rel="noopener">Pedir orçamento pelo WhatsApp</a><a class="botao botao--claro" href="/br#projetos">Ver projetos</a></div>
-</section>
-{p["corpo"]}
-<section class="cartao" id="perguntas"><h2>Perguntas <em>frequentes</em></h2>{faq_html(p["faq"])}</section>
-{chamada(p["chamada_titulo"], p["chamada_texto"])}
-{relacionados(p["caminho"])}
-</main>'''
-    return cabeca(p, url, ld) + corpo + "\n" + rodape() + f'''
-<a class="whats" href="{WHATS}" target="_blank" rel="noopener" aria-label="Falar com a gente no WhatsApp">{pt.SVG_WHATS}</a>
-</body>
-</html>
-'''
+        return pt.montar(BR, p, url, ld, "", "")
+    p = dict(p, cta="Pedir orçamento pelo WhatsApp")
+    return pt.montar(BR, p, url, ld, chamada(p["chamada_titulo"], p["chamada_texto"]), relacionados(p["caminho"]))
 
 
 FAQ_BASE = [

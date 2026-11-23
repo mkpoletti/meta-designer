@@ -71,11 +71,22 @@ def esc(t):
     return html.escape(t, quote=True)
 
 
+# Mockups do portfólio no visual novo (assets/br/proj-<id>.webp e -640.webp). Quem não tem mockup usa o print antigo.
+MOCKUPS = {"dentix", "oralplus", "antonio-bica", "nacar", "legatus", "terraco-nobre", "nevogilde", "serena",
+           "clinica-domicilio-funchal", "cdt-logistica", "amplify", "agencia-seo", "conecta-viagens"}
+
+
 def projetos(chaves):
     out = []
     for k in chaves:
         nome, setor, img = PROJ[k]
-        out.append(f'<figure><img src="/assets/projetos/{img}.webp" alt="Site {esc(nome)}: {esc(setor)}" width="700" height="522" loading="lazy"><figcaption><strong>{esc(nome)}</strong>{esc(setor)}</figcaption></figure>')
+        alt = f"Site {esc(nome)}: {esc(setor)}"
+        if img in MOCKUPS:
+            tag = (f'<img src="/assets/br/proj-{img}-640.webp" srcset="/assets/br/proj-{img}-640.webp 640w, /assets/br/proj-{img}.webp 1240w" '
+                   f'sizes="(max-width:860px) 92vw, 480px" alt="{alt}" width="1240" height="698" loading="lazy">')
+        else:
+            tag = f'<img class="tela" src="/assets/projetos/{img}.webp" alt="{alt}" width="700" height="522" loading="lazy">'
+        out.append(f'<figure>{tag}<figcaption><strong>{esc(nome)}</strong>{esc(setor)}</figcaption></figure>')
     return '<div class="projetos">' + "".join(out) + "</div>"
 
 
@@ -83,17 +94,129 @@ def faq_html(faqs):
     return '<div class="faq">' + "".join(f"<details><summary>{esc(q)}</summary><p>{a}</p></details>" for q, a in faqs) + "</div>"
 
 
+# ─────────────── moldura do visual novo (topo, rodapé, botão flutuante), partilhada com o gerador do Brasil ───────────────
+SVG_WA = ('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/>'
+          '<path class="cheio" d="M9 8.5c.3 2.6 2.4 5 5.2 5.9l1-1.2-1.6-.9-.7.6c-1-.4-1.8-1.3-2.2-2.3l.6-.7-.8-1.6z"/></svg>')
+
+PT = dict(
+    lang="pt-PT", locale="pt_PT", inicio="/", whats=WHATS, cta="Falar no WhatsApp", pular="Saltar para o conteúdo",
+    menu=[("/#portfolio", "Projetos"), ("/#metodo", "Como trabalhamos"), ("/quanto-custa-um-site", "Preços"), ("/#contacto", "Contacto")],
+    paginas=PAGINAS_MENU, paginas_titulo="Sites por cidade, setor e guias:",
+    navegacao=[("/", "Início"), ("/#portfolio", "Portfólio"), ("/#metodo", "Como trabalhamos"), ("/#designer", "Designer"), ("/#contacto", "Contacto")],
+    contacto=["Atendimento em todo Portugal", "Online, por vídeo e WhatsApp"],
+    legais=[("/privacidade", "Privacidade"), ("/termos", "Termos")], outro=("/br", "pt-BR", "Brasil"),
+    copy="© 2026 Meta Designer · Estúdio brasileiro de web design para negócios em Portugal",
+    flutuante=("Atendimento personalizado", "Fala com o Mike"), whats_label="Falar com o Mike no WhatsApp",
+    slogan="Sites que impressionam.<br>E que trazem clientes.", agenda="Agenda aberta para novos projetos",
+    ver_projetos="Ver projetos", inicio_nome="Início",
+)
+
+
+def topo(c):
+    menu = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in c["menu"])
+    return f'''<a class="pular" href="#conteudo">{c["pular"]}</a>
+<header class="topo">
+  <a class="marca" href="{c["inicio"]}" aria-label="Meta Designer, início"><img src="/assets/logo-claro.svg" alt="Meta Designer" width="150" height="40"></a>
+  <nav class="menu" aria-label="Principal">{menu}</nav>
+  <a class="btn-azul" href="{c["whats"]}" target="_blank" rel="noopener">{c["cta"]}</a>
+</header>'''
+
+
+def rodape(c, atual=""):
+    nav = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in c["navegacao"])
+    atual_attr = ' aria-current="page"'
+    pags = "".join(f'<a href="{u}"{atual_attr if u == atual else ""}>{esc(n)}</a>' for u, n in c["paginas"])
+    cont = "".join(f"<span>{esc(t)}</span>" for t in c["contacto"])
+    leg = " · ".join(f'<a href="{u}">{esc(n)}</a>' for u, n in c["legais"])
+    ou, ol, on = c["outro"]
+    return f'''<footer class="rodape">
+  <div class="colunas">
+    <div><img src="/assets/logo-claro.svg" alt="Meta Designer" width="150" height="40" loading="lazy"><p>{c["slogan"]}</p><p class="status">{c["agenda"]}</p><a class="btn-azul" href="{c["whats"]}" target="_blank" rel="noopener">{c["cta"]}</a></div>
+    <div><h3>Navegação</h3>{nav}</div>
+    <div><h3>{"Contacto" if c["lang"] == "pt-PT" else "Contato"}</h3><a href="{c["whats"]}" target="_blank" rel="noopener">WhatsApp +55 21 96628-9500</a>{cont}</div>
+    <div><h3>Redes</h3><a href="https://www.instagram.com/metadesigner_1/" target="_blank" rel="noopener">Instagram @metadesigner_1</a><a href="https://www.behance.net/mikepoletti" target="_blank" rel="noopener">Behance</a><span>CNPJ 38.284.190/0001-99</span></div>
+  </div>
+  <nav class="paginas" aria-label="Páginas"><b>{c["paginas_titulo"]}</b>{pags}</nav>
+  <p class="marca-gigante" aria-hidden="true"><span>Meta Designer</span><i></i></p>
+  <div class="base"><span>{c["copy"]}</span><span>{leg} · <a href="{ou}" hreflang="{ol}" lang="{ol}">{on}</a></span></div>
+</footer>
+<a class="flutuante" href="{c["whats"]}" target="_blank" rel="noopener" aria-label="{c["whats_label"]}">
+  <img src="/assets/br/mike-poletti-420.webp" alt="" width="42" height="42">
+  <span><small>{c["flutuante"][0]}</small><b>{c["flutuante"][1]}</b></span>
+  <i class="wa-ico"></i>
+</a>'''
+
+
+def cabeca(c, p, url, ld, alternativos=""):
+    robots = p.get("robots", "index, follow, max-image-preview:large")
+    return f'''<!doctype html>
+<html lang="{c["lang"]}">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(p["titulo"])}</title>
+<meta name="description" content="{esc(p["descricao"])}">
+<meta name="robots" content="{robots}">
+<link rel="canonical" href="{url}">
+<link rel="alternate" hreflang="{c["lang"]}" href="{url}">{alternativos}
+<meta property="og:type" content="{"article" if p["tipo"] == "guia" else "website"}">
+<meta property="og:url" content="{url}">
+<meta property="og:locale" content="{c["locale"]}">
+<meta property="og:site_name" content="Meta Designer">
+<meta property="og:title" content="{esc(p["titulo"])}">
+<meta property="og:description" content="{esc(p["descricao"])}">
+<meta property="og:image" content="{DOMINIO}/assets/br/og-br.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fontes/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/paginas.css?v={HOJE.replace("-", "")}">
+<script type="application/ld+json">{ld}</script>
+</head>
+<body>
+'''
+
+
+def migalhas(c, p):
+    return f'<nav class="migalhas" aria-label="Caminho"><ol><li><a href="{c["inicio"]}">{c["inicio_nome"]}</a></li><li aria-current="page">{esc(p["migalha"])}</li></ol></nav>'
+
+
+def montar(c, p, url, ld, chamada_html, relacionados_html, alternativos=""):
+    """Página completa no visual novo. p["tipo"]: servico | guia | legal | 404."""
+    if p["tipo"] in ("legal", "404"):
+        corpo = f'''<main id="conteudo">
+<div class="bloco bloco--legal">{migalhas(c, p) if p["tipo"] == "legal" else ""}<div class="cartao legal">{p["corpo"]}</div></div>
+</main>'''
+    else:
+        corpo = f'''<main id="conteudo">
+<section class="abertura">
+  {migalhas(c, p)}
+  <p class="etiqueta">{p["etiqueta"]}</p>
+  <h1>{p["h1"]}</h1>
+  <p class="resumo">{p["resumo"]}</p>
+  <div class="botoes"><a class="btn-wa" href="{c["whats"]}" target="_blank" rel="noopener">{SVG_WA}{p.get("cta", c["cta"])}</a><a class="btn-borda" href="{c["inicio"]}#portfolio">{c["ver_projetos"]}</a></div>
+</section>
+{p["corpo"]}
+<section class="bloco" id="perguntas"><div class="cartao"><h2>{p.get("faq_titulo", "Perguntas <em>frequentes</em>")}</h2>{faq_html(p["faq"])}</div></section>
+{chamada_html}
+{relacionados_html}
+</main>'''
+    return cabeca(c, p, url, ld, alternativos) + topo(c) + "\n" + corpo + "\n" + rodape(c, p["caminho"]) + "\n</body>\n</html>\n"
+
+
 def chamada(titulo, texto):
     return f'''<section class="chamada">
   <h2>{titulo}</h2>
   <p>{texto}</p>
-  <div class="botoes"><a class="botao" href="{WHATS}" target="_blank" rel="noopener">Falar no WhatsApp</a><a class="botao botao--claro" href="/#contacto">Pedir conversa grátis</a></div>
+  <div class="botoes"><a class="btn-wa" href="{WHATS}" target="_blank" rel="noopener">{SVG_WA}Falar no WhatsApp</a><a class="btn-borda" href="/#contacto">Pedir conversa grátis</a></div>
+  <p class="nota">Sites desde 300€. Pagas 20% para começar e 80% só depois de aprovares o site.</p>
 </section>'''
 
 
 def relacionados(atual):
     links = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in PAGINAS_MENU if u != atual)
-    return f'<section class="cartao"><h2>Também te pode interessar</h2><div class="relacionados">{links}<a href="/#projetos">Ver todos os projetos</a></div></section>'
+    return f'<section class="bloco"><div class="cartao"><h2>Também te pode <em>interessar</em></h2><div class="relacionados">{links}<a href="/#portfolio">Ver todos os projetos</a></div></div></section>'
 
 
 def pagina(p):
@@ -121,57 +244,23 @@ def pagina(p):
                       "author": {"@id": DOMINIO + "/#organizacao"}, "publisher": {"@id": DOMINIO + "/#organizacao"},
                       "mainEntityOfPage": {"@id": url + "#pagina"}, "image": DOMINIO + "/assets/img/og.jpg"})
     ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False)
-    menu = "".join(f'<a href="{u}">{esc(n)}</a>' for u, n in PAGINAS_MENU)
-    return f'''<!doctype html>
-<html lang="pt-PT">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(p["titulo"])}</title>
-<meta name="description" content="{esc(p["descricao"])}">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<link rel="canonical" href="{url}">
-<link rel="alternate" hreflang="pt-PT" href="{url}">
-<meta property="og:type" content="{"article" if p["tipo"] == "guia" else "website"}">
-<meta property="og:url" content="{url}">
-<meta property="og:locale" content="pt_PT">
-<meta property="og:site_name" content="Meta Designer">
-<meta property="og:title" content="{esc(p["titulo"])}">
-<meta property="og:description" content="{esc(p["descricao"])}">
-<meta property="og:image" content="{DOMINIO}/assets/img/og.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#7DB8FF">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/assets/fontes/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/paginas.css?v={HOJE.replace("-", "")}">
-<script type="application/ld+json">{ld}</script>
-</head>
-<body>
-<header class="topo"><a href="/"><img src="/assets/logo.svg" alt="Meta Designer" width="95" height="40"></a><a class="botao" href="/#contacto">Conversa grátis</a></header>
-<nav class="migalhas" aria-label="Caminho"><ol><li><a href="/">Início</a></li><li aria-current="page">{esc(p["migalha"])}</li></ol></nav>
-<main>
-<section class="cartao">
-  <p class="etiqueta">{p["etiqueta"]}</p>
-  <h1>{p["h1"]}</h1>
-  <p class="resumo">{p["resumo"]}</p>
-  <div class="botoes"><a class="botao" href="{WHATS}" target="_blank" rel="noopener">Falar no WhatsApp</a><a class="botao botao--claro" href="/#projetos">Ver projetos</a></div>
-</section>
-{p["corpo"]}
-<section class="cartao" id="perguntas"><h2>Perguntas <em>frequentes</em></h2>{faq_html(p["faq"])}</section>
-{chamada(p["chamada_titulo"], p["chamada_texto"])}
-{relacionados(p["caminho"])}
-</main>
-<footer>
-  <nav aria-label="Páginas">{menu}<a href="/privacidade">Privacidade</a><a href="/termos">Termos</a></nav>
-  © 2026 Meta Designer · Estúdio brasileiro de web design para negócios em Portugal · CNPJ 38.284.190/0001-99
-</footer>
-<a class="whats" href="{WHATS}" target="_blank" rel="noopener" aria-label="Falar connosco no WhatsApp">{SVG_WHATS}</a>
-</body>
-</html>
-'''
+    return montar(PT, p, url, ld, chamada(p["chamada_titulo"], p["chamada_texto"]), relacionados(p["caminho"]))
+
+
+def pagina_simples(p):
+    """Páginas legais e 404 de Portugal (conteúdo em ferramentas/legal_pt/ ou no próprio dicionário)."""
+    url = DOMINIO + p["caminho"]
+    grafo = [{"@type": "WebPage", "@id": url + "#pagina", "url": url, "name": p["titulo"], "description": p["descricao"],
+              "inLanguage": "pt-PT", "isPartOf": {"@id": DOMINIO + "/#website"}, "publisher": {"@id": DOMINIO + "/#organizacao"}},
+             {"@type": "BreadcrumbList", "itemListElement": [
+                 {"@type": "ListItem", "position": 1, "name": "Início", "item": DOMINIO + "/"},
+                 {"@type": "ListItem", "position": 2, "name": p["migalha"], "item": url}]}]
+    ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False)
+    return montar(PT, p, url, ld, "", "")
 
 
 def sec(titulo, conteudo):
-    return f'<section class="cartao"><h2>{titulo}</h2>{conteudo}</section>'
+    return f'<section class="bloco"><div class="cartao"><h2>{titulo}</h2>{conteudo}</div></section>'
 
 
 # ───────────────────────── conteúdo ─────────────────────────
@@ -340,7 +429,7 @@ P.append(dict(
           + sec("Quanto custa <em>na Meta Designer</em>",
                 "<p>Os nossos sites começam nos <strong>300€</strong>, com design exclusivo, animações, versão para telemóvel, SEO e preparação para a IA incluídos. O valor final depende do número de páginas e das funcionalidades.</p>"
                 "<p>Pagas só 20% para começar. Os restantes 80% só depois de aprovares a última fase, com o site pronto. Domínio e alojamento dependem do plano que escolheres e explicamos tudo antes de avançares.</p>"
-                "<div class=\"botoes\"><a class=\"botao\" href=\"/#contacto\">Saber quanto custa o meu</a></div>")
+                "<div class=\"botoes\"><a class=\"btn-borda\" href=\"/#contacto\">Saber quanto custa o meu</a></div>")
           + sec("Barato <em>pode sair caro?</em>",
                 "<p>Um site muito barato pode sair caro se for lento, se não aparecer no Google ou se ficar preso a uma plataforma que não controlas. O preço certo é o de um site que traz contactos e que é teu. Compara sempre o que está incluído, não só o valor.</p>"),
     faq=[
@@ -535,6 +624,8 @@ P.append(dict(
 
 def escrever_sitemap():
     """Sitemap com Portugal (raiz) e Brasil (/br). Usado por este gerador e pelo gerar_paginas_br.py."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
     import gerar_paginas_br as br
     urls = [("/", "1.0", "monthly")] + [(p["caminho"], "0.8" if p["tipo"] == "servico" else "0.7", "monthly") for p in P] + [("/privacidade", "0.3", None), ("/termos", "0.3", None)]
     urls += [("/br", "0.9", "monthly")] + [(p["caminho"], "0.8", "monthly") for p in br.P_BR] + [(p["caminho"], "0.3", None) for p in br.P_LEGAL]
@@ -547,11 +638,40 @@ def escrever_sitemap():
     print("ok sitemap.xml", len(urls), "URLs")
 
 
+def legais_pt():
+    import re
+    out = []
+    for nome, migalha in (("privacidade", "Política de Privacidade"), ("termos", "Termos e Condições")):
+        s = (SITE / "ferramentas" / "legal_pt" / f"{nome}.html").read_text(encoding="utf-8")
+        titulo = re.search(r"<!-- titulo: (.*?) -->", s).group(1)
+        descricao = re.search(r"<!-- descricao: (.*?) -->", s).group(1)
+        out.append(dict(caminho=f"/{nome}", tipo="legal", migalha=migalha, titulo=titulo, descricao=descricao,
+                        robots="index, follow", corpo=s.split("\n", 2)[2]))
+    return out
+
+
+P404 = dict(caminho="/404", tipo="404", migalha="Página não encontrada", titulo="Página não encontrada | Meta Designer",
+            descricao="O endereço que procuras não existe ou mudou de lugar.", robots="noindex, follow",
+            corpo='<p class="etiqueta">Erro 404</p><h1>Esta página <em>saiu da rota.</em></h1>'
+                  '<p>O endereço que procuras não existe ou mudou de lugar. A meta continua no mesmo sítio.</p>'
+                  '<div class="botoes"><a class="btn-wa" href="/">Ir para a página principal</a>'
+                  '<a class="btn-borda" href="/br" hreflang="pt-BR" lang="pt-BR">Estou no Brasil</a></div>')
+
+
 def main():
+    import re
     for p in P:
         destino = SITE / (p["caminho"].strip("/") + ".html")
         destino.write_text(pagina(p), encoding="utf-8")
         print("ok", destino.name)
+    for p in legais_pt():
+        destino = SITE / (p["caminho"].strip("/") + ".html")
+        destino.write_text(pagina_simples(p), encoding="utf-8")
+        print("ok", destino.name)
+    # 404: sem canonical nem hreflang (não é indexada)
+    h = re.sub(r'<link rel="(canonical|alternate)"[^>]*>\n?', "", pagina_simples(P404))
+    (SITE / "404.html").write_text(h, encoding="utf-8")
+    print("ok 404.html")
     escrever_sitemap()
 
 

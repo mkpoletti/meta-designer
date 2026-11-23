@@ -338,3 +338,28 @@ svg .arco{stroke:var(--verde);stroke-linecap:round;transform:rotate(-90deg);tran
 .chamada .cartao .sub{font-size:19px}
 .cookies-opcoes[hidden]{display:none}
 @media (max-width:860px){.marca-gigante{margin-inline:24px;font-size:12.4vw}}
+/* ---------- contacto com formulário (home de Portugal) ---------- */
+.contacto{padding-block:40px 120px}
+.contacto .form-caixa{max-width:760px;margin:auto;padding:48px clamp(20px,5vw,56px);border-radius:32px;background:linear-gradient(180deg,#1A1A1E,#101012);border:1px solid var(--linha)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form .campo{display:flex;flex-direction:column;gap:8px;border:0}
+.form .campo--largo,.form .campo--opcoes,.form .campo--check,.form button,.form .form-status,.form .form-alt{grid-column:1/-1}
+.form label,.form legend{font-size:14px;color:var(--mut)}
+.form input[type=text],.form input[type=tel]{width:100%;padding:15px 18px;border-radius:14px;background:var(--bg);border:1px solid var(--linha);color:var(--txt);font:inherit;font-size:16px;transition:border-color .25s}
+.form input:focus{outline:0;border-color:var(--azul)}
+.form .opcoes{display:flex;gap:12px;flex-wrap:wrap}
+.form .opcao{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;background:var(--bg);border:1px solid var(--linha);color:var(--txt);font-size:15px;cursor:pointer}
+.form .campo--check .opcao{border:0;background:none;padding:0;border-radius:0}
+.form .opcao a{color:var(--azul-c);text-decoration:underline}
+.form input[type=radio],.form input[type=checkbox]{accent-color:var(--azul);width:18px;height:18px}
+.form .campo-erro{color:#FF8A8A;font-size:13px;min-height:0}
+.form .erro input[type=text],.form .erro input[type=tel]{border-color:#FF6B6B}
+.form button{justify-self:center;margin-top:8px;border:0}
+.form-status{text-align:center;color:var(--mut);font-size:14px;min-height:1em}.form-status.falha{color:#FF8A8A}
+.form-alt{text-align:center;color:var(--mut);font-size:14px}.form-alt a{color:var(--azul-c);text-decoration:underline}
+.honey{position:absolute;left:-9999px;opacity:0}
+.form-sucesso{text-align:center;padding:30px 0}.form-sucesso .titulo{margin:auto}
+.preco{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:1px solid var(--linha);background:rgba(21,21,23,.7);color:var(--mut);font-size:15px}.preco b{color:var(--txt);font-weight:600}
+@media (max-width:640px){.form{grid-template-columns:1fr}}
+/* evita rolagem lateral no celular (cartões e notificações que saem da tela) */
+main,.rodape{overflow-x:clip}
