@@ -26,6 +26,10 @@
 - Atendimento 100% online para todo o Brasil (WhatsApp, videochamada e e-mail), a partir do Rio de Janeiro.
 - Orçamento sem compromisso pelo WhatsApp; o valor depende do número de páginas e das funcionalidades.
 - Pagamento no Brasil: 50% para começar e 50% após a aprovação da última etapa.
+- Contato no Brasil: direto pelo WhatsApp +55 21 96628-9500, sem formulário.
+- Designer responsável: Mike Poletti (Mike Designer Co.), Product Designer e especialista em Framer, Rio de Janeiro. Portfólio: https://www.behance.net/mikepoletti
+- Velocidade medida no PageSpeed Insights em 23/11/2026 para https://metadesigner.site/br: 100 em Desempenho, Acessibilidade, Práticas recomendadas e SEO, no celular e no computador.
+- Projetos em destaque na página do Brasil: Serena (bem-estar e nutrição), Nácar (odontologia), Residência Nevogilde (imobiliário), Vita em Casa (saúde ao domicílio), Santa Zita, Terraço Nobre, Dentix, Legatus, CDT, Amplify, Dr. António Bica, OralPlus, Conecta Viagens e Agência de SEO.
 
 ## Contacto
 - WhatsApp: +55 21 96628-9500
