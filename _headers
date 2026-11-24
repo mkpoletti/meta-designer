@@ -21,3 +21,6 @@
 # Endereço provisório *.pages.dev fora do Google (só o domínio próprio é indexado)
 https://:project.pages.dev/*
   X-Robots-Tag: noindex
+
+/previa/*
+  X-Robots-Tag: noindex, nofollow
